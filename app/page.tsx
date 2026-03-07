@@ -1,78 +1,10 @@
 import { Header } from "@/components/header"
 import { SearchBar } from "@/components/search-bar"
 import { CategoryGrid } from "@/components/category-grid"
-import { DealCard, type Deal } from "@/components/deal-card"
+import { CouponsList } from "@/components/coupons-list"
+import { SubmitCouponForm } from "@/components/submit-coupon-form"
 import { Footer } from "@/components/footer"
 import { Sparkles, TrendingUp, Zap } from "lucide-react"
-
-const featuredDeals: Deal[] = [
-  {
-    id: "1",
-    brand: "Domino's Pizza",
-    brandInitial: "D",
-    discount: "50% OFF",
-    description:
-      "Get half off on all large pizzas when you order online. Valid for carryout and delivery.",
-    code: "PIZZA50",
-    expiryDate: "Mar 15, 2026",
-    category: "Food",
-  },
-  {
-    id: "2",
-    brand: "Nike",
-    brandInitial: "N",
-    discount: "30% OFF",
-    description:
-      "Save 30% on select footwear and apparel. Limited time offer on new arrivals.",
-    code: "NIKE30SAVE",
-    expiryDate: "Mar 20, 2026",
-    category: "Fashion",
-  },
-  {
-    id: "3",
-    brand: "Amazon",
-    brandInitial: "A",
-    discount: "20% OFF",
-    description:
-      "Extra 20% off on electronics and tech gadgets. Prime members only.",
-    code: "TECH20NOW",
-    expiryDate: "Mar 18, 2026",
-    category: "Electronics",
-  },
-  {
-    id: "4",
-    brand: "Expedia",
-    brandInitial: "E",
-    discount: "$100 OFF",
-    description:
-      "Save $100 on flight + hotel packages. Minimum booking value $500.",
-    code: "TRAVEL100",
-    expiryDate: "Apr 1, 2026",
-    category: "Travel",
-  },
-  {
-    id: "5",
-    brand: "CVS Pharmacy",
-    brandInitial: "C",
-    discount: "40% OFF",
-    description:
-      "Get 40% off on vitamins and supplements. ExtraCare members exclusive.",
-    code: "HEALTHY40",
-    expiryDate: "Mar 25, 2026",
-    category: "Health",
-  },
-  {
-    id: "6",
-    brand: "Coursera",
-    brandInitial: "C",
-    discount: "25% OFF",
-    description:
-      "Save 25% on annual subscriptions. Access unlimited courses and certifications.",
-    code: "LEARN25",
-    expiryDate: "Mar 31, 2026",
-    category: "Education",
-  },
-]
 
 const stats = [
   { label: "Active Coupons", value: "12,500+", icon: Sparkles },
@@ -141,38 +73,27 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Featured Deals */}
+        {/* Featured Deals from Supabase */}
         <section>
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div className="mb-8 flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                  Featured Deals
+                  Latest Coupons
                 </h2>
                 <p className="mt-2 text-muted-foreground">
-                  Today{"'"}s top coupons and promo codes
+                  Fresh deals added by the community
                 </p>
               </div>
-              <a
-                href="/deals"
-                className="hidden text-sm font-medium text-primary hover:underline sm:block"
-              >
-                View all deals
-              </a>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredDeals.map((deal) => (
-                <DealCard key={deal.id} deal={deal} />
-              ))}
-            </div>
-            <div className="mt-6 text-center sm:hidden">
-              <a
-                href="/deals"
-                className="text-sm font-medium text-primary hover:underline"
-              >
-                View all deals
-              </a>
-            </div>
+            <CouponsList />
+          </div>
+        </section>
+
+        {/* Submit Coupon Form */}
+        <section className="border-t border-border bg-secondary/20">
+          <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
+            <SubmitCouponForm />
           </div>
         </section>
 
