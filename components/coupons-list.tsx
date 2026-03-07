@@ -1,6 +1,6 @@
 "use client"
 
-import useSWR, { mutate } from "swr"
+import useSWR, { mutate as globalMutate } from "swr"
 import { createClient } from "@/lib/supabase/client"
 import { CouponCard, type Coupon } from "./coupon-card"
 import { Loader2, AlertCircle, Ticket } from "lucide-react"
@@ -58,5 +58,5 @@ export function CouponsList() {
 }
 
 export function refreshCoupons() {
-  return mutate("coupons")
+  return globalMutate("coupons")
 }
