@@ -1,0 +1,84 @@
+"use client"
+
+import { useState } from "react"
+import { Check, Clock, Copy, Tag } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+
+export interface Deal {
+  id: string
+  brand: string
+  brandInitial: string
+  discount: string
+  description: string
+  code: string
+  expiryDate: string
+  category: string
+}
+
+export function DealCard({ deal }: { deal: Deal }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(deal.code)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <Card className="group overflow-hidden border-border transition-all hover:border-primary/50 hover:shadow-lg">
+      <CardContent className="p-0">
+        <div className="flex flex-col sm:flex-row">
+          <div className="flex items-center justify-center bg-secondary p-6 sm:w-32">
+            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary text-2xl font-bold text-primary-foreground">
+              {deal.brandInitial}
+            </div>
+          </div>
+          <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
+            <div className="space-y-2">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h3 className="font-semibold text-foreground">{deal.brand}</h3>
+                  <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary">
+                    <Tag className="h-3.5 w-3.5" />
+                    {deal.discount}
+                  </span>
+                </div>
+                <span className="shrink-0 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                  {deal.category}
+                </span>
+              </div>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {deal.description}
+              </p>
+            </div>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Clock className="h-4 w-4" />
+                <span>Expires {deal.expiryDate}</span>
+              </div>
+              <Button
+                onClick={handleCopy}
+                variant={copied ? "secondary" : "default"}
+                size="sm"
+                className="min-w-[120px] gap-2"
+              >
+                {copied ? (
+                  <>
+                    <Check className="h-4 w-4" />
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4" />
+                    Copy Code
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
