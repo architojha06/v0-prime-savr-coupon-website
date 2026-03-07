@@ -57,7 +57,6 @@ export function CouponsList() {
   )
 }
 
-export function useCouponsMutate() {
-  const { mutate } = useSWR("coupons", fetcher)
-  return mutate
+export function refreshCoupons() {
+  return mutate("coupons")
 }

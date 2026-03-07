@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Check, Loader2, Send } from "lucide-react"
+import { refreshCoupons } from "./coupons-list"
 
 const categories = ["Food", "Fashion", "Electronics", "Travel", "Health", "Education"]
 
@@ -55,6 +56,7 @@ export function SubmitCouponForm({ onSuccess }: { onSuccess?: () => void }) {
     setIsSuccess(true)
     e.currentTarget.reset()
     setCategory("")
+    refreshCoupons()
     
     setTimeout(() => {
       setIsSuccess(false)
