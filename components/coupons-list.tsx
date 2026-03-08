@@ -16,8 +16,17 @@ const fetcher = async () => {
   return data as Coupon[]
 }
 
-export function CouponsList() {
+interface CouponsListProps {
+  selectedCategory?: string
+}
+
+export function CouponsList({ selectedCategory = "All" }: CouponsListProps) {
   const { data: coupons, error, isLoading, mutate } = useSWR("coupons", fetcher)
+  
+  const filteredCoupons = coupons?.filter((coupon) => {
+    if (selectedCategory === "All") return true
+    return coupon.category?.toLowerCase() === selectedCategory.toLowerCase()
+  })
 
   if (isLoading) {
     return (
@@ -48,9 +57,19 @@ export function CouponsList() {
     )
   }
 
+  if (!filteredCoupons || filteredCoupons.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-secondary/30 py-12 text-center">
+        <Ticket className="h-10 w-10 text-muted-foreground" />
+        <p className="mt-2 font-medium text-foreground">No coupons in {selectedCategory}</p>
+        <p className="text-sm text-muted-foreground">Try selecting a different category</p>
+      </div>
+    )
+  }
+
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {coupons.map((coupon) => (
+      {filteredCoupons.map((coupon) => (
         <CouponCard key={coupon.id} coupon={coupon} />
       ))}
     </div>

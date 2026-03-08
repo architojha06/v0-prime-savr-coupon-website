@@ -1,6 +1,10 @@
+"use client"
+
+import { useState } from "react"
 import { Header } from "@/components/header"
 import { SearchBar } from "@/components/search-bar"
 import { CategoryGrid } from "@/components/category-grid"
+import { CategoryFilter } from "@/components/category-filter"
 import { CouponsList } from "@/components/coupons-list"
 import { SubmitCouponForm } from "@/components/submit-coupon-form"
 import { Footer } from "@/components/footer"
@@ -13,6 +17,8 @@ const stats = [
 ]
 
 export default function Home() {
+  const [selectedCategory, setSelectedCategory] = useState("All")
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
@@ -76,17 +82,21 @@ export default function Home() {
         {/* Featured Deals from Supabase */}
         <section>
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <div className="mb-8 flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                  Latest Coupons
-                </h2>
-                <p className="mt-2 text-muted-foreground">
-                  Fresh deals added by the community
-                </p>
-              </div>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                Latest Coupons
+              </h2>
+              <p className="mt-2 text-muted-foreground">
+                Fresh deals added by the community
+              </p>
             </div>
-            <CouponsList />
+            <div className="mb-8">
+              <CategoryFilter 
+                selectedCategory={selectedCategory} 
+                onCategoryChange={setSelectedCategory} 
+              />
+            </div>
+            <CouponsList selectedCategory={selectedCategory} />
           </div>
         </section>
 
