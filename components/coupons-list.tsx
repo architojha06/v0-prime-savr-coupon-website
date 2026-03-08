@@ -23,10 +23,17 @@ interface CouponsListProps {
 export function CouponsList({ selectedCategory = "All" }: CouponsListProps) {
   const { data: coupons, error, isLoading, mutate } = useSWR("coupons", fetcher)
   
+  console.log("[v0] selectedCategory:", selectedCategory)
+  console.log("[v0] coupons:", coupons?.map(c => ({ brand: c.brand_name, category: c.category })))
+  
   const filteredCoupons = coupons?.filter((coupon) => {
     if (selectedCategory === "All") return true
-    return coupon.category?.toLowerCase() === selectedCategory.toLowerCase()
+    const matches = coupon.category?.toLowerCase() === selectedCategory.toLowerCase()
+    console.log("[v0] Comparing:", coupon.category?.toLowerCase(), "===", selectedCategory.toLowerCase(), "->", matches)
+    return matches
   })
+  
+  console.log("[v0] filteredCoupons count:", filteredCoupons?.length)
 
   if (isLoading) {
     return (

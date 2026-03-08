@@ -7,14 +7,8 @@ import { CategoryGrid } from "@/components/category-grid"
 import { CategoryFilter } from "@/components/category-filter"
 import { CouponsList } from "@/components/coupons-list"
 import { SubmitCouponForm } from "@/components/submit-coupon-form"
+import { StatsSection } from "@/components/stats-section"
 import { Footer } from "@/components/footer"
-import { Sparkles, TrendingUp, Zap } from "lucide-react"
-
-const stats = [
-  { label: "Active Coupons", value: "12,500+", icon: Sparkles },
-  { label: "Brands", value: "2,800+", icon: TrendingUp },
-  { label: "Daily Updates", value: "500+", icon: Zap },
-]
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All")
@@ -42,25 +36,7 @@ export default function Home() {
             </div>
 
             {/* Stats */}
-            <div className="mt-12 grid grid-cols-3 gap-4 sm:mt-16">
-              {stats.map((stat) => {
-                const Icon = stat.icon
-                return (
-                  <div
-                    key={stat.label}
-                    className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-4 text-center sm:p-6"
-                  >
-                    <Icon className="h-5 w-5 text-primary sm:h-6 sm:w-6" />
-                    <span className="text-xl font-bold text-foreground sm:text-2xl lg:text-3xl">
-                      {stat.value}
-                    </span>
-                    <span className="text-xs text-muted-foreground sm:text-sm">
-                      {stat.label}
-                    </span>
-                  </div>
-                )
-              })}
-            </div>
+            <StatsSection />
           </div>
         </section>
 
