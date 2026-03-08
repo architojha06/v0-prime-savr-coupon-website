@@ -18,25 +18,15 @@ const fetcher = async () => {
 
 interface CouponsListProps {
   selectedCategory?: string
-  searchQuery?: string
 }
 
-export function CouponsList({ selectedCategory = "All", searchQuery = "" }: CouponsListProps) {
+export function CouponsList({ selectedCategory = "All" }: CouponsListProps) {
   const { data: coupons, error, isLoading, mutate } = useSWR("coupons", fetcher)
   
   const filteredCoupons = coupons?.filter((coupon) => {
-    // Filter by category
-    const categoryMatch = selectedCategory === "All" || 
+    // Filter by category only
+    return selectedCategory === "All" || 
       coupon.category?.toLowerCase() === selectedCategory.toLowerCase()
-    
-    // Filter by search query
-    const query = searchQuery.toLowerCase().trim()
-    const searchMatch = !query || 
-      coupon.brand_name?.toLowerCase().includes(query) ||
-      coupon.discount_description?.toLowerCase().includes(query) ||
-      coupon.category?.toLowerCase().includes(query)
-    
-    return categoryMatch && searchMatch
   })
 
   if (isLoading) {
