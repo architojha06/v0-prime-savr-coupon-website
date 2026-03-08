@@ -18,22 +18,26 @@ const fetcher = async () => {
 
 interface CouponsListProps {
   selectedCategory?: string
+  searchQuery?: string
 }
 
-export function CouponsList({ selectedCategory = "All" }: CouponsListProps) {
+export function CouponsList({ selectedCategory = "All", searchQuery = "" }: CouponsListProps) {
   const { data: coupons, error, isLoading, mutate } = useSWR("coupons", fetcher)
   
-  console.log("[v0] selectedCategory:", selectedCategory)
-  console.log("[v0] coupons:", coupons?.map(c => ({ brand: c.brand_name, category: c.category })))
-  
   const filteredCoupons = coupons?.filter((coupon) => {
-    if (selectedCategory === "All") return true
-    const matches = coupon.category?.toLowerCase() === selectedCategory.toLowerCase()
-    console.log("[v0] Comparing:", coupon.category?.toLowerCase(), "===", selectedCategory.toLowerCase(), "->", matches)
-    return matches
+    // Filter by category
+    const categoryMatch = selectedCategory === "All" || 
+      coupon.category?.toLowerCase() === selectedCategory.toLowerCase()
+    
+    // Filter by search query
+    const query = searchQuery.toLowerCase().trim()
+    const searchMatch = !query || 
+      coupon.brand_name?.toLowerCase().includes(query) ||
+      coupon.discount_description?.toLowerCase().includes(query) ||
+      coupon.category?.toLowerCase().includes(query)
+    
+    return categoryMatch && searchMatch
   })
-  
-  console.log("[v0] filteredCoupons count:", filteredCoupons?.length)
 
   if (isLoading) {
     return (
@@ -65,11 +69,18 @@ export function CouponsList({ selectedCategory = "All" }: CouponsListProps) {
   }
 
   if (!filteredCoupons || filteredCoupons.length === 0) {
+    const message = searchQuery 
+      ? `No coupons found for "${searchQuery}"` 
+      : `No coupons in ${selectedCategory}`
+    const subMessage = searchQuery 
+      ? "Try a different search term" 
+      : "Try selecting a different category"
+    
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-secondary/30 py-12 text-center">
         <Ticket className="h-10 w-10 text-muted-foreground" />
-        <p className="mt-2 font-medium text-foreground">No coupons in {selectedCategory}</p>
-        <p className="text-sm text-muted-foreground">Try selecting a different category</p>
+        <p className="mt-2 font-medium text-foreground">{message}</p>
+        <p className="text-sm text-muted-foreground">{subMessage}</p>
       </div>
     )
   }
