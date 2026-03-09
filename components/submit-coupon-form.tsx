@@ -49,6 +49,7 @@ export function SubmitCouponForm({ onSuccess }: { onSuccess?: () => void }) {
       expiry_date: formData.get("expiry_date") as string,
       affiliate_link: (formData.get("affiliate_link") as string) || null,
       condition: (formData.get("condition") as string) || null,
+      user_id: user.id,
     }
 
     const supabase = createClient()
