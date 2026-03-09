@@ -12,7 +12,6 @@ import { Footer } from "@/components/footer"
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All")
-  const [searchQuery, setSearchQuery] = useState("")
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -32,7 +31,7 @@ export default function Home() {
                 thousands of your favorite brands.
               </p>
               <div className="mt-8">
-                <SearchBar value={searchQuery} onChange={setSearchQuery} />
+                <SearchBar />
               </div>
             </div>
 
@@ -73,7 +72,7 @@ export default function Home() {
                 onCategoryChange={setSelectedCategory} 
               />
             </div>
-            <CouponsList selectedCategory={selectedCategory} searchQuery={searchQuery} />
+            <CouponsList selectedCategory={selectedCategory} />
           </div>
         </section>
 

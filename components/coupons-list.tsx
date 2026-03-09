@@ -59,12 +59,8 @@ export function CouponsList({ selectedCategory = "All" }: CouponsListProps) {
   }
 
   if (!filteredCoupons || filteredCoupons.length === 0) {
-    const message = searchQuery 
-      ? `No coupons found for "${searchQuery}"` 
-      : `No coupons in ${selectedCategory}`
-    const subMessage = searchQuery 
-      ? "Try a different search term" 
-      : "Try selecting a different category"
+    const message = `No coupons in ${selectedCategory}`
+    const subMessage = "Try selecting a different category"
     
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-border bg-secondary/30 py-12 text-center">

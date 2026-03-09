@@ -10,6 +10,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Check, Loader2, Send } from "lucide-react"
 import { refreshCoupons } from "./coupons-list"
+import { useAuth } from "@/components/auth-provider"
+import { AuthRequiredDialog } from "@/components/auth-required-dialog"
 
 const categories = ["Food", "Fashion", "Electronics", "Travel", "Health", "Education"]
 
@@ -18,9 +20,17 @@ export function SubmitCouponForm({ onSuccess }: { onSuccess?: () => void }) {
   const [isSuccess, setIsSuccess] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [category, setCategory] = useState("")
+  const [showAuthDialog, setShowAuthDialog] = useState(false)
+  const { user } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (!user) {
+      setShowAuthDialog(true)
+      return
+    }
+
     setIsSubmitting(true)
     setError(null)
 
@@ -65,18 +75,29 @@ export function SubmitCouponForm({ onSuccess }: { onSuccess?: () => void }) {
   }
 
   return (
-    <Card className="border-border">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <Send className="h-5 w-5 text-primary" />
-          Submit a Coupon
-        </CardTitle>
-        <CardDescription>
-          Share a deal you found with the community
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <>
+      <AuthRequiredDialog
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
+        nextPath={
+          typeof window !== "undefined"
+            ? `${window.location.pathname}${window.location.search}`
+            : "/"
+        }
+        message="Please login or signup to access this feature"
+      />
+      <Card className="border-border">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <Send className="h-5 w-5 text-primary" />
+            Submit a Coupon
+          </CardTitle>
+          <CardDescription>
+            Share a deal you found with the community
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="brand_name">Brand Name *</Label>
@@ -184,7 +205,8 @@ export function SubmitCouponForm({ onSuccess }: { onSuccess?: () => void }) {
             )}
           </Button>
         </form>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </>
   )
 }

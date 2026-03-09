@@ -4,6 +4,8 @@ import { useState } from "react"
 import { Check, Clock, Copy, Tag, Info } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/components/auth-provider"
+import { AuthRequiredDialog } from "@/components/auth-required-dialog"
 
 export interface Coupon {
   id: string
@@ -18,8 +20,14 @@ export interface Coupon {
 
 export function CouponCard({ coupon }: { coupon: Coupon }) {
   const [copied, setCopied] = useState(false)
+  const [showAuthDialog, setShowAuthDialog] = useState(false)
+  const { user } = useAuth()
 
   const handleCopy = async () => {
+    if (!user) {
+      setShowAuthDialog(true)
+      return
+    }
     await navigator.clipboard.writeText(coupon.coupon_code)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -41,8 +49,19 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
   }
 
   return (
-    <Card className="group overflow-hidden border-border transition-all hover:border-primary/50 hover:shadow-lg">
-      <CardContent className="p-0">
+    <>
+      <AuthRequiredDialog
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
+        nextPath={
+          typeof window !== "undefined"
+            ? `${window.location.pathname}${window.location.search}`
+            : "/"
+        }
+        message="Please login or signup to access this feature"
+      />
+      <Card className="group overflow-hidden border-border transition-all hover:border-primary/50 hover:shadow-lg">
+        <CardContent className="p-0">
         <div className="flex flex-col sm:flex-row">
           <div className="flex items-center justify-center bg-secondary p-6 sm:w-32">
             <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary text-2xl font-bold text-primary-foreground">
@@ -96,7 +115,8 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </>
   )
 }

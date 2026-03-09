@@ -5,6 +5,8 @@ import { Search, X, Tag, ExternalLink } from "lucide-react"
 import useSWR from "swr"
 import { createClient } from "@/lib/supabase/client"
 import type { Coupon } from "./coupon-card"
+import { useAuth } from "@/components/auth-provider"
+import { AuthRequiredDialog } from "@/components/auth-required-dialog"
 
 const fetcher = async () => {
   const supabase = createClient()
@@ -20,8 +22,10 @@ const fetcher = async () => {
 export function SearchBar() {
   const [query, setQuery] = useState("")
   const [isOpen, setIsOpen] = useState(false)
+  const [showAuthDialog, setShowAuthDialog] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const { data: coupons } = useSWR("coupons", fetcher)
+  const { user } = useAuth()
 
   const filteredCoupons = coupons?.filter((coupon) => {
     const searchQuery = query.toLowerCase().trim()
@@ -45,11 +49,25 @@ export function SearchBar() {
   }, [])
 
   const handleCopyCode = async (code: string) => {
+    if (!user) {
+      setShowAuthDialog(true)
+      return
+    }
     await navigator.clipboard.writeText(code)
   }
 
   return (
     <div ref={wrapperRef} className="relative w-full">
+      <AuthRequiredDialog
+        open={showAuthDialog}
+        onOpenChange={setShowAuthDialog}
+        nextPath={
+          typeof window !== "undefined"
+            ? `${window.location.pathname}${window.location.search}`
+            : "/"
+        }
+        message="Please login or signup to access this feature"
+      />
       <div className="relative">
         <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
         <input
@@ -78,9 +96,9 @@ export function SearchBar() {
         )}
       </div>
 
-      {/* Search Results Dropdown */}
+{/* Search Results Dropdown - directly below search bar */}
       {isOpen && query.trim() && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 max-h-96 overflow-auto rounded-xl border border-border bg-card shadow-lg">
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-96 overflow-auto rounded-xl border border-border bg-card shadow-lg">
           {filteredCoupons && filteredCoupons.length > 0 ? (
             <ul className="divide-y divide-border">
               {filteredCoupons.map((coupon) => (
