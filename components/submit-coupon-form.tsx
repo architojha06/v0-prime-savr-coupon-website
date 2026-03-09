@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { createClient } from "@/lib/supabase/client"
+import { createAuthedClient, createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -52,7 +52,17 @@ export function SubmitCouponForm({ onSuccess }: { onSuccess?: () => void }) {
     }
 
     const supabase = createClient()
-    const { error: insertError } = await supabase
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.getSession()
+
+    if (sessionError || !sessionData.session?.access_token) {
+      setIsSubmitting(false)
+      setShowAuthDialog(true)
+      return
+    }
+
+    const authedSupabase = createAuthedClient(sessionData.session.access_token)
+    const { error: insertError } = await authedSupabase
       .from("coupons")
       .insert([couponData])
 
