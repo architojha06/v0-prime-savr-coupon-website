@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,11 +32,14 @@ export function AuthRequiredDialog({
   nextPath: string
   message?: string
 }) {
-  const searchParams = useSearchParams()
-  const reason = searchParams.get("reason") ?? "auth_required"
-
-  const loginHref = withParams("/login", { next: nextPath, reason })
-  const signupHref = withParams("/signup", { next: nextPath, reason })
+  const loginHref = withParams("/login", {
+    next: nextPath,
+    reason: "auth_required",
+  })
+  const signupHref = withParams("/signup", {
+    next: nextPath,
+    reason: "auth_required",
+  })
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
