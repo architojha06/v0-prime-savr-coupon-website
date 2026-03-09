@@ -13,37 +13,31 @@ const categories = [
     name: "Food",
     icon: UtensilsCrossed,
     href: "/food",
-    deals: 234,
   },
   {
     name: "Fashion",
     icon: Shirt,
     href: "/fashion",
-    deals: 567,
   },
   {
     name: "Electronics",
     icon: Laptop,
     href: "/electronics",
-    deals: 189,
   },
   {
     name: "Travel",
     icon: Plane,
     href: "/travel",
-    deals: 145,
   },
   {
     name: "Health",
     icon: Heart,
     href: "/health",
-    deals: 98,
   },
   {
     name: "Education",
     icon: BookOpen,
     href: "/education",
-    deals: 76,
   },
 ]
 
@@ -63,9 +57,6 @@ export function CategoryGrid() {
             </div>
             <div className="text-center">
               <h3 className="font-medium text-foreground">{category.name}</h3>
-              <p className="text-sm text-muted-foreground">
-                {category.deals} deals
-              </p>
             </div>
           </Link>
         )

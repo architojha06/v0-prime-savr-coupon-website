@@ -1,26 +1,18 @@
-import { createClient as createSupabaseClient } from "@supabase/supabase-js"
+import { createBrowserClient } from "@supabase/ssr"
 
-const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ??
-  "https://adpejjieppqtzmydtdxf.supabase.co"
+// Use the legacy project URL and anon key directly so that
+// the browser client always talks to the correct Supabase instance.
+const supabaseUrl = "https://adpejjieppqtzmydtdxf.supabase.co"
 
 const supabaseAnonKey =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkcGVqamllcHBxdHpteWR0ZHhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4OTIwMzAsImV4cCI6MjA4ODQ2ODAzMH0.gqsRTRXwbyO6F3BHEi7eheDRu99SpEvnq2Q3kAJEkkA"
 
-export const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey)
-
 export function createClient() {
-  return supabase
+  return createBrowserClient(supabaseUrl, supabaseAnonKey)
 }
 
 export function createAuthedClient(accessToken: string) {
-  return createSupabaseClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false,
-    },
+  return createBrowserClient(supabaseUrl, supabaseAnonKey, {
     global: {
       headers: {
         Authorization: `Bearer ${accessToken}`,
