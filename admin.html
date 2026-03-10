@@ -828,8 +828,8 @@
 
       const [totalUsers, totalCoupons, pendingCount, subscriberCount] = await Promise.all([
         countFetch('users'),
-        countFetch('coupons', 'status=eq.active'),
-        countFetch('coupons', 'status=eq.pending'),
+        countFetch('coupons'),
+        Promise.resolve(0),
         countFetch('newsletter'),
       ]);
 
@@ -843,7 +843,7 @@
       // Load recent users for dashboard table
       const recentUsers = await sb('users', { select: '*', order: 'created_at.desc', limit: 5 });
       if (Array.isArray(recentUsers) && recentUsers.length > 0) {
-        document.querySelector('.table tbody').innerHTML = recentUsers.map((u,i) => {
+        document.querySelector('#page-dashboard .table tbody').innerHTML = recentUsers.map((u,i) => {
           const col = colorFor(u.name || u.email);
           const initial = (u.name || u.email || '?')[0].toUpperCase();
           return `<tr>
@@ -906,17 +906,17 @@
       const data = await sb('coupons', { select: '*', order: 'created_at.desc' });
       if (!Array.isArray(data) || data.length === 0) { list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">No coupons found. Make sure your table is named "coupons".</div>'; return; }
       list.innerHTML = data.map(c => {
-        const col = colorFor(c.brand);
-        const initial = (c.brand || '?')[0].toUpperCase();
+        const col = colorFor(c.brand_name);
+        const initial = ( c.brand_name || "?")[0].toUpperCase();
         const status = c.status || 'active';
         return `<div class="coupon-row">
           <div class="coupon-brand">
             <div class="coupon-logo" style="background:${col}20;color:${col}">${initial}</div>
-            <div><div class="coupon-name">${c.brand || '—'}</div><div class="coupon-cat">${c.category || '—'} · Expires ${fmtDate(c.expires_at)}</div></div>
+            <div><div class="coupon-name">${c.brand_name || '—'}</div><div class="coupon-cat">${c.category || '—'} · Expires ${fmtDate(c.expiry_date)}</div></div>
           </div>
           <div style="font-size:12px;color:var(--muted);max-width:200px">${c.description || '—'}</div>
-          <div class="coupon-code">${c.code || '—'}</div>
-          <div style="font-size:13px;color:var(--muted)">${(c.copies||0).toLocaleString()} copies</div>
+          <div class="coupon-code">${c.coupon_code || '—'}</div>
+          <div style="font-size:13px;color:var(--muted)">${(c.upvotes||0).toLocaleString()} copies</div>
           <span class="badge ${status === 'active' ? 'approved' : status === 'pending' ? 'pending' : 'expired'}">● ${status}</span>
           <div class="coupon-actions">
             <button class="btn-sm btn-edit">Edit</button>
@@ -947,14 +947,14 @@
       // Update warning count
       document.querySelector('#page-pending .pending-card-count, #page-pending strong')?.textContent = data.length + ' coupons';
       list.innerHTML = data.map(p => {
-        const col = colorFor(p.brand);
-        const initial = (p.brand || '?')[0].toUpperCase();
+        const col = colorFor(p.brand_name);
+        const initial = (p.brand_name || '?')[0].toUpperCase();
         return `<div class="pending-card" data-id="${p.id}">
           <div class="pending-logo" style="background:${col}20;color:${col}">${initial}</div>
           <div class="pending-info">
-            <div class="pending-brand">${p.brand || '—'} <span style="font-size:11px;background:var(--bg3);padding:2px 8px;border-radius:5px;color:var(--muted);margin-left:6px;font-weight:400">${p.category || '—'}</span></div>
-            <div class="pending-desc">${p.description || '—'}</div>
-            <div class="pending-meta">Code: <span>${p.code || '—'}</span> &nbsp;·&nbsp; Submitted: <span>${fmtDate(p.created_at)}</span></div>
+            <div class="pending-brand">${p.brand_name || '—'} <span style="font-size:11px;background:var(--bg3);padding:2px 8px;border-radius:5px;color:var(--muted);margin-left:6px;font-weight:400">${p.category || '—'}</span></div>
+            <div class="pending-desc">${p.discount_description || '—'}</div>
+            <div class="pending-meta">Code: <span>${p.coupon_code || '—'}</span> &nbsp;·&nbsp; Submitted: <span>${fmtDate(p.created_at)}</span></div>
           </div>
           <div class="pending-actions">
             <button class="btn-sm btn-approve" onclick="approvePending('${p.id}', this)">✓ Approve</button>
