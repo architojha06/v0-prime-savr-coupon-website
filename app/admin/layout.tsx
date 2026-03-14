@@ -8,21 +8,25 @@ export default async function AdminLayout({
 }) {
   const supabase = await createClient()
 
-  // Check if user is logged in
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+  console.log("ADMIN LAYOUT - user:", user?.email, "error:", userError)
 
   if (!user) {
+    console.log("ADMIN LAYOUT - no user, redirecting to login")
     redirect("/login")
   }
 
-  // Check if user is admin
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("is_admin")
     .eq("id", user.id)
     .single()
 
+  console.log("ADMIN LAYOUT - profile:", profile, "error:", profileError)
+
   if (!profile?.is_admin) {
+    console.log("ADMIN LAYOUT - not admin, redirecting to home")
     redirect("/")
   }
 
