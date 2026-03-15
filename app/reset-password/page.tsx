@@ -14,11 +14,27 @@ export default function ResetPasswordPage() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    // Supabase sets the session from the URL hash automatically
-    supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") setReady(true)
-    })
-  }, [])
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      setReady(true)
+    }
+    // Also handle if user is already logged in via the token
+    if (session && event !== "SIGNED_OUT") {
+      setReady(true)
+    }
+  })
+
+  // Fallback: check if there's already a session after 2 seconds
+  const timeout = setTimeout(async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (session) setReady(true)
+  }, 2000)
+
+  return () => {
+    subscription.unsubscribe()
+    clearTimeout(timeout)
+  }
+}, [])
 
   const handleReset = async () => {
     if (password !== confirm) { setError("Passwords don't match"); return }
