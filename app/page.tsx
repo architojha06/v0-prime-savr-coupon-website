@@ -9,6 +9,7 @@ import { CouponsList } from "@/components/coupons-list"
 import { SubmitCouponForm } from "@/components/submit-coupon-form"
 import { StatsSection } from "@/components/stats-section"
 import { Footer } from "@/components/footer"
+import { NewsletterSection } from "@/components/newsletter-section"
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All")
@@ -87,30 +88,9 @@ const handleCategoryClick = (category: string) => {
         </section>
 
         <section className="border-t border-border bg-foreground">
-          <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-2xl text-center">
-              <h2 className="text-2xl font-bold tracking-tight text-background sm:text-3xl">
-                Never Miss a Deal
-              </h2>
-              <p className="mt-3 text-background/70">
-                Subscribe to our newsletter and get the best deals delivered
-                straight to your inbox.
-              </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:gap-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="h-12 flex-1 rounded-lg border-0 bg-background px-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-                <button
-                  type="button"
-                  className="h-12 rounded-lg bg-primary px-6 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-                >
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
+         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <NewsletterSection />
+         </div>
         </section>
       </main>
       <Footer />
