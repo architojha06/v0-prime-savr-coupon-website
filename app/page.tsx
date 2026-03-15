@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Header } from "@/components/header"
 import { SearchBar } from "@/components/search-bar"
 import { CategoryGrid } from "@/components/category-grid"
@@ -12,7 +12,12 @@ import { Footer } from "@/components/footer"
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All")
+  const couponsSectionRef = useRef<HTMLDivElement>(null)
 
+const handleCategoryClick = (category: string) => {
+  setSelectedCategory(category)
+  couponsSectionRef.current?.scrollIntoView({ behavior: "smooth" })
+}
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
@@ -46,11 +51,10 @@ export default function Home() {
                 Find deals in your favorite categories
               </p>
             </div>
-            <CategoryGrid />
+            <CategoryGrid onCategoryClick={handleCategoryClick} />
           </div>
-        </section>
-
-        <section>
+          </section>
+        <section ref={couponsSectionRef}>
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div className="mb-6">
               <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
