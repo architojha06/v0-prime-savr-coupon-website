@@ -20,6 +20,8 @@ const footerLinks = {
     { name: "Terms & Conditions", href: "/terms-and-conditions" },
     { name: "Privacy Policy", href: "/privacy-policy" },
     { name: "Disclaimer", href: "/disclaimer" },
+    { name: "Refund Policy", href: "/refund-policy" },
+    { name: "Contact Us", href: "/contact" },
     { name: "Submit a Deal", href: "/submit" },
   ],
 }
