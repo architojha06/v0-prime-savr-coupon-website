@@ -22,24 +22,30 @@ const handleCategoryClick = (category: string) => {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <section className="border-b border-border bg-secondary/30">
-          <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-            <div className="mx-auto max-w-3xl text-center">
-              <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
-                Save More on Every Purchase with{" "}
-                <span className="text-primary">PrimeSavr</span>
-              </h1>
-              <p className="mt-4 text-pretty text-lg leading-relaxed text-muted-foreground sm:text-xl">
-                Find the best coupons, promo codes, and exclusive deals from
-                thousands of your favorite brands.
-              </p>
-              <div className="mt-8">
-                <SearchBar />
-              </div>
-            </div>
-            <StatsSection />
-          </div>
-        </section>
+        <section className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-b from-orange-50/60 to-white">
+         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+          {/* Pill badge */}
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-1.5 text-sm font-medium text-orange-600">
+         <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
+         India's fastest growing coupon platform
+         </div>
+
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+         Save More on Every
+         <span className="block text-orange-500">Purchase with PrimeSavr</span>
+        </h1>
+      <p className="mt-5 text-lg text-gray-500 leading-relaxed">
+        Find the best coupons, promo codes, and exclusive deals from
+        thousands of your favorite brands.
+      </p>
+      <div className="mt-8">
+        <SearchBar />
+      </div>
+    </div>
+    <StatsSection />
+  </div>
+</section>
 
         <section className="border-b border-border">
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">

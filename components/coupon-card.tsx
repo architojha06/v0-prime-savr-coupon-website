@@ -2,8 +2,6 @@
 
 import { useState } from "react"
 import { Check, Clock, Copy, Tag, Info } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { useAuth } from "@/components/auth-provider"
 import { AuthRequiredDialog } from "@/components/auth-required-dialog"
 
@@ -18,105 +16,118 @@ export interface Coupon {
   affiliate_link: string | null
 }
 
+const categoryColors: Record<string, { bg: string; text: string }> = {
+  Food: { bg: "bg-orange-50", text: "text-orange-600" },
+  Fashion: { bg: "bg-pink-50", text: "text-pink-600" },
+  Electronics: { bg: "bg-blue-50", text: "text-blue-600" },
+  Travel: { bg: "bg-teal-50", text: "text-teal-600" },
+  Health: { bg: "bg-green-50", text: "text-green-600" },
+  Education: { bg: "bg-purple-50", text: "text-purple-600" },
+  Beauty: { bg: "bg-rose-50", text: "text-rose-600" },
+  Sports: { bg: "bg-yellow-50", text: "text-yellow-600" },
+  default: { bg: "bg-gray-50", text: "text-gray-600" },
+}
+
+const brandColors = [
+  "bg-orange-500", "bg-pink-500", "bg-blue-500",
+  "bg-teal-500", "bg-purple-500", "bg-rose-500",
+]
+
+function getBrandColor(name: string) {
+  const index = name.charCodeAt(0) % brandColors.length
+  return brandColors[index]
+}
+
 export function CouponCard({ coupon }: { coupon: Coupon }) {
   const [copied, setCopied] = useState(false)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
   const { user } = useAuth()
 
   const handleCopy = async () => {
-    if (!user) {
-      setShowAuthDialog(true)
-      return
-    }
+    if (!user) { setShowAuthDialog(true); return }
     await navigator.clipboard.writeText(coupon.coupon_code)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const brandInitial = coupon.brand_name.charAt(0).toUpperCase()
-  
   const formatDate = (dateString: string) => {
     try {
-      const date = new Date(dateString)
-      return date.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
+      return new Date(dateString).toLocaleDateString("en-IN", {
+        month: "short", day: "numeric", year: "numeric",
       })
-    } catch {
-      return dateString
-    }
+    } catch { return dateString }
   }
+
+  const colorScheme = categoryColors[coupon.category] ?? categoryColors.default
+  const brandColor = getBrandColor(coupon.brand_name)
+  const brandInitial = coupon.brand_name.charAt(0).toUpperCase()
 
   return (
     <>
       <AuthRequiredDialog
         open={showAuthDialog}
         onOpenChange={setShowAuthDialog}
-        nextPath={
-          typeof window !== "undefined"
-            ? `${window.location.pathname}${window.location.search}`
-            : "/"
-        }
+        nextPath={typeof window !== "undefined" ? `${window.location.pathname}${window.location.search}` : "/"}
         message="Please login or signup to access this feature"
       />
-      <Card className="group overflow-hidden border-border transition-all hover:border-primary/50 hover:shadow-lg">
-        <CardContent className="p-0">
-        <div className="flex flex-col sm:flex-row">
-          <div className="flex items-center justify-center bg-secondary p-6 sm:w-32">
-            <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-primary text-2xl font-bold text-primary-foreground">
-              {brandInitial}
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col justify-between p-4 sm:p-5">
-            <div className="space-y-2">
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h3 className="font-semibold text-foreground">{coupon.brand_name}</h3>
-                  <span className="inline-flex items-center gap-1 rounded-md bg-primary/10 px-2 py-0.5 text-sm font-medium text-primary">
-                    <Tag className="h-3.5 w-3.5" />
-                    {coupon.discount_description}
-                  </span>
-                </div>
-                <span className="shrink-0 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+      <div className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-200 hover:-translate-y-0.5 hover:border-gray-200 hover:shadow-lg">
+        {/* Top accent strip */}
+        <div className={`h-1 w-full ${brandColor}`} />
+
+        <div className="p-5">
+          {/* Header row */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${brandColor} text-lg font-bold text-white shadow-sm`}>
+                {brandInitial}
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 leading-tight">{coupon.brand_name}</h3>
+                <span className={`inline-flex items-center gap-1 text-xs font-medium mt-0.5 ${colorScheme.text}`}>
+                  <Tag className="h-3 w-3" />
                   {coupon.category}
                 </span>
               </div>
-              {coupon.condition && (
-                <div className="flex items-start gap-1.5 text-sm text-muted-foreground">
-                  <Info className="mt-0.5 h-4 w-4 shrink-0" />
-                  <span>{coupon.condition}</span>
-                </div>
-              )}
-            </div>
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                <span>Expires {formatDate(coupon.expiry_date)}</span>
-              </div>
-              <Button
-                onClick={handleCopy}
-                variant={copied ? "secondary" : "default"}
-                size="sm"
-                className="min-w-[120px] gap-2"
-              >
-                {copied ? (
-                  <>
-                    <Check className="h-4 w-4" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4" />
-                    Copy Code
-                  </>
-                )}
-              </Button>
             </div>
           </div>
+
+          {/* Discount description */}
+          <div className={`mt-3 rounded-xl px-3 py-2 ${colorScheme.bg}`}>
+            <p className={`text-sm font-semibold ${colorScheme.text}`}>{coupon.discount_description}</p>
+          </div>
+
+          {/* Condition */}
+          {coupon.condition && (
+            <div className="mt-2.5 flex items-start gap-1.5">
+              <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-gray-400" />
+              <p className="text-xs text-gray-400 leading-relaxed">{coupon.condition}</p>
+            </div>
+          )}
+
+          {/* Footer */}
+          <div className="mt-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-1.5 text-xs text-gray-400">
+              <Clock className="h-3.5 w-3.5" />
+              <span>Expires {formatDate(coupon.expiry_date)}</span>
+            </div>
+
+            <button
+              onClick={handleCopy}
+              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+                copied
+                  ? "bg-green-50 text-green-600"
+                  : "bg-orange-500 text-white hover:bg-orange-600 active:scale-95"
+              }`}
+            >
+              {copied ? (
+                <><Check className="h-4 w-4" />Copied!</>
+              ) : (
+                <><Copy className="h-4 w-4" />Copy Code</>
+              )}
+            </button>
+          </div>
         </div>
-        </CardContent>
-      </Card>
+      </div>
     </>
   )
 }
