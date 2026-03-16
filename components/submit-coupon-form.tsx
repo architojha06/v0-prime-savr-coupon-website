@@ -82,7 +82,7 @@ export function SubmitCouponForm({ onSuccess }: { onSuccess?: () => void }) {
     setTimeout(() => {
       setIsSuccess(false)
       onSuccess?.()
-    }, 2000)
+    }, 3000)
   }
 
   return (
@@ -193,28 +193,39 @@ export function SubmitCouponForm({ onSuccess }: { onSuccess?: () => void }) {
             </div>
           )}
 
-          <Button
-            type="submit"
-            disabled={isSubmitting || isSuccess}
-            className="w-full gap-2"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Submitting...
-              </>
-            ) : isSuccess ? (
-              <>
+          {isSuccess ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-center gap-2 rounded-xl bg-green-50 py-3 text-sm font-semibold text-green-600">
                 <Check className="h-4 w-4" />
-                Coupon Submitted!
-              </>
-            ) : (
-              <>
-                <Send className="h-4 w-4" />
-                Submit Coupon
-              </>
-            )}
-          </Button>
+                Coupon Submitted! Pending review.
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSuccess(false)}
+                className="w-full text-center text-sm text-orange-500 hover:underline"
+              >
+                + Submit another coupon
+              </button>
+            </div>
+             ) : (
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full gap-2"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" />
+                  Submit Coupon
+                </>
+              )}
+            </Button>
+             )}
         </form>
         </CardContent>
       </Card>
