@@ -13,7 +13,8 @@ import { refreshCoupons } from "./coupons-list"
 import { useAuth } from "@/components/auth-provider"
 import { AuthRequiredDialog } from "@/components/auth-required-dialog"
 
-const categories = ["Food", "Fashion", "Electronics", "Travel", "Health", "Education"]
+const categories = ["Food", "Fashion", "Electronics", "Travel", "Health", "Education","Beauty", "Jewellery", "Entertainment", "Books", "Sports",
+  "Home & Kitchen", "Baby & Kids", "Automobiles"]
 
 export function SubmitCouponForm({ onSuccess }: { onSuccess?: () => void }) {
   const [isSubmitting, setIsSubmitting] = useState(false)

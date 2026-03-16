@@ -3,13 +3,9 @@
 import { cn } from "@/lib/utils"
 
 const categories = [
-  "All",
-  "Food",
-  "Fashion",
-  "Electronics",
-  "Travel",
-  "Health",
-  "Education",
+  "All", "Food", "Fashion", "Electronics", "Travel", "Health",
+  "Education", "Beauty", "Jewellery", "Entertainment", "Books",
+  "Sports", "Home & Kitchen", "Baby & Kids", "Automobiles",
 ]
 
 interface CategoryFilterProps {

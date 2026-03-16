@@ -5,6 +5,14 @@ import {
   Plane,
   Shirt,
   UtensilsCrossed,
+  Sparkles,
+  Gem,
+  Tv,
+  BookMarked,
+  Dumbbell, 
+  Home,
+  Baby,
+  Car
 } from "lucide-react"
 
 const categories = [
@@ -14,6 +22,14 @@ const categories = [
   { name: "Travel", icon: Plane, bg: "bg-teal-50", text: "text-teal-500", hover: "group-hover:text-teal-600" },
   { name: "Health", icon: Heart, bg: "bg-green-50", text: "text-green-500", hover: "group-hover:text-green-600" },
   { name: "Education", icon: BookOpen, bg: "bg-purple-50", text: "text-purple-500", hover: "group-hover:text-purple-600" },
+  { name: "Beauty", icon: Sparkles, bg: "bg-rose-50", text: "text-rose-500", hover: "group-hover:text-rose-600" },
+  { name: "Jewellery", icon: Gem, bg: "bg-yellow-50", text: "text-yellow-600", hover: "group-hover:text-yellow-700" },
+  { name: "Entertainment", icon: Tv, bg: "bg-indigo-50", text: "text-indigo-500", hover: "group-hover:text-indigo-600" },
+  { name: "Books", icon: BookMarked, bg: "bg-amber-50", text: "text-amber-600", hover: "group-hover:text-amber-700" },
+  { name: "Sports", icon: Dumbbell, bg: "bg-lime-50", text: "text-lime-600", hover: "group-hover:text-lime-700" },
+  { name: "Home & Kitchen", icon: Home, bg: "bg-cyan-50", text: "text-cyan-600", hover: "group-hover:text-cyan-700" },
+  { name: "Baby & Kids", icon: Baby, bg: "bg-sky-50", text: "text-sky-500", hover: "group-hover:text-sky-600" },
+  { name: "Automobiles", icon: Car, bg: "bg-slate-50", text: "text-slate-500", hover: "group-hover:text-slate-600" },
 ]
 
 type CategoryGridProps = {
@@ -22,7 +38,7 @@ type CategoryGridProps = {
 
 export function CategoryGrid({ onCategoryClick }: CategoryGridProps) {
   return (
-    <div className="grid grid-cols-3 gap-3 sm:grid-cols-6 sm:gap-4">
+    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-7 sm:gap-4">
       {categories.map((category) => {
         const Icon = category.icon
         return (
