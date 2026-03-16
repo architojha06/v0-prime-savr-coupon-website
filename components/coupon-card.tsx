@@ -32,19 +32,17 @@ const brandColors = [
   "bg-orange-500", "bg-pink-500", "bg-blue-500",
   "bg-teal-500", "bg-purple-500", "bg-rose-500",
 ]
-
 function getBrandColor(name: string) {
   const index = name.charCodeAt(0) % brandColors.length
   return brandColors[index]
 }
-
 function getBrandLogoUrl(brandName: string): string {
   const domain = brandName
     .toLowerCase()
     .trim()
     .replace(/\s+/g, "")
     .replace(/[^a-z0-9]/g, "")
-  return `https://logo.clearbit.com/${domain}.com`
+  return `https://www.google.com/s2/favicons?domain=${domain}.com&sz=64`
 }
 
 export function CouponCard({ coupon }: { coupon: Coupon }) {
