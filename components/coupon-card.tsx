@@ -38,11 +38,20 @@ function getBrandColor(name: string) {
   return brandColors[index]
 }
 
+function getBrandLogoUrl(brandName: string): string {
+  const domain = brandName
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "")
+    .replace(/[^a-z0-9]/g, "")
+  return `https://logo.clearbit.com/${domain}.com`
+}
+
 export function CouponCard({ coupon }: { coupon: Coupon }) {
   const [copied, setCopied] = useState(false)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
   const { user } = useAuth()
-
+  const [logoError, setLogoError] = useState(false)
   const handleCopy = async () => {
     if (!user) { setShowAuthDialog(true); return }
     await navigator.clipboard.writeText(coupon.coupon_code)
@@ -78,8 +87,17 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
           {/* Header row */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${brandColor} text-lg font-bold text-white shadow-sm`}>
-                {brandInitial}
+              <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl overflow-hidden ${logoError ? `${brandColor} text-lg font-bold text-white shadow-sm` : "bg-white border border-gray-100 shadow-sm"}`}>
+               {!logoError ? (
+                <img
+                src={getBrandLogoUrl(coupon.brand_name)}
+                  alt={coupon.brand_name}
+                  className="h-9 w-9 object-contain"
+                   onError={() => setLogoError(true)}
+                    />
+                     ) : (
+                    brandInitial
+                       )}
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 leading-tight">{coupon.brand_name}</h3>
