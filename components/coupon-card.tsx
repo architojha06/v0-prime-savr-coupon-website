@@ -88,12 +88,12 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
           {/* Header row */}
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl overflow-hidden ${logoError ? `${brandColor} text-lg font-bold text-white shadow-sm` : "bg-white border border-gray-100 shadow-sm"}`}>
+              <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl overflow-hidden ${logoError ? `${brandColor} text-lg font-bold text-white shadow-sm` : "bg-white border border-gray-100 shadow-sm"}`}>
                 {!logoError ? (
                   <img
                     src={getBrandLogoUrl(coupon.brand_name)}
                     alt={coupon.brand_name}
-                    className="h-9 w-9 object-contain"
+                    className="h-12 w-12 object-contain"
                     onError={() => setLogoError(true)}
                   />
                 ) : (
