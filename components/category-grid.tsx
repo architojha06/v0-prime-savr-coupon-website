@@ -1,35 +1,12 @@
-import {
-  BookOpen,
-  Heart,
-  Laptop,
-  Plane,
-  Shirt,
-  UtensilsCrossed,
-  Sparkles,
-  Gem,
-  Tv,
-  BookMarked,
-  Dumbbell, 
-  Home,
-  Baby,
-  Car
-} from "lucide-react"
-
-const categories = [
-  { name: "Food", icon: UtensilsCrossed, bg: "bg-orange-50", text: "text-orange-500", hover: "group-hover:text-orange-600" },
-  { name: "Fashion", icon: Shirt, bg: "bg-pink-50", text: "text-pink-500", hover: "group-hover:text-pink-600" },
-  { name: "Electronics", icon: Laptop, bg: "bg-blue-50", text: "text-blue-500", hover: "group-hover:text-blue-600" },
-  { name: "Travel", icon: Plane, bg: "bg-teal-50", text: "text-teal-500", hover: "group-hover:text-teal-600" },
-  { name: "Health", icon: Heart, bg: "bg-green-50", text: "text-green-500", hover: "group-hover:text-green-600" },
-  { name: "Education", icon: BookOpen, bg: "bg-purple-50", text: "text-purple-500", hover: "group-hover:text-purple-600" },
-  { name: "Beauty", icon: Sparkles, bg: "bg-rose-50", text: "text-rose-500", hover: "group-hover:text-rose-600" },
-  { name: "Jewellery", icon: Gem, bg: "bg-yellow-50", text: "text-yellow-600", hover: "group-hover:text-yellow-700" },
-  { name: "Entertainment", icon: Tv, bg: "bg-indigo-50", text: "text-indigo-500", hover: "group-hover:text-indigo-600" },
-  { name: "Books", icon: BookMarked, bg: "bg-amber-50", text: "text-amber-600", hover: "group-hover:text-amber-700" },
-  { name: "Sports", icon: Dumbbell, bg: "bg-lime-50", text: "text-lime-600", hover: "group-hover:text-lime-700" },
-  { name: "Home & Kitchen", icon: Home, bg: "bg-cyan-50", text: "text-cyan-600", hover: "group-hover:text-cyan-700" },
-  { name: "Baby & Kids", icon: Baby, bg: "bg-sky-50", text: "text-sky-500", hover: "group-hover:text-sky-600" },
-  { name: "Automobiles", icon: Car, bg: "bg-slate-50", text: "text-slate-500", hover: "group-hover:text-slate-600" },
+const brands = [
+  { name: "Levi's", bg: "bg-red-50", text: "text-red-600", initial: "L" },
+  { name: "Myntra", bg: "bg-pink-50", text: "text-pink-600", initial: "M" },
+  { name: "Noise", bg: "bg-blue-50", text: "text-blue-600", initial: "N" },
+  { name: "H&M", bg: "bg-red-50", text: "text-red-700", initial: "H" },
+  { name: "Snitch", bg: "bg-gray-50", text: "text-gray-800", initial: "S" },
+  { name: "MuscleBlaze", bg: "bg-orange-50", text: "text-orange-600", initial: "MB" },
+  { name: "HK Vitals", bg: "bg-green-50", text: "text-green-600", initial: "HK" },
+  { name: "Dot & Key", bg: "bg-purple-50", text: "text-purple-600", initial: "D" },
 ]
 
 type CategoryGridProps = {
@@ -38,24 +15,21 @@ type CategoryGridProps = {
 
 export function CategoryGrid({ onCategoryClick }: CategoryGridProps) {
   return (
-    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-7 sm:gap-4">
-      {categories.map((category) => {
-        const Icon = category.icon
-        return (
-          <button
-            key={category.name}
-            onClick={() => onCategoryClick?.(category.name)}
-            className="group flex flex-col items-center gap-3 rounded-2xl border border-gray-100 bg-white p-4 transition-all duration-150 hover:-translate-y-1 hover:border-orange-200 hover:shadow-md sm:p-5 w-full"
-          >
-            <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${category.bg} ${category.text} transition-all duration-150`}>
-              <Icon className="h-6 w-6" />
-            </div>
-            <span className={`text-xs font-600 text-gray-600 transition-colors duration-150 ${category.hover}`}>
-              {category.name}
-            </span>
-          </button>
-        )
-      })}
-    </div>
-  )
+  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-4 sm:gap-4">
+    {brands.map((brand) => (
+      <button
+        key={brand.name}
+        onClick={() => onCategoryClick?.(brand.name)}
+        className="group flex-col items-center justify-between rounded-2xl border border-gray-100 bg-white p-4 transition-all duration-150 hover:-translate-y-1 hover:border-orange-200 hover:shadow-md w-full text-left"
+      >
+        <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${brand.bg} ${brand.text} font-bold text-sm mb-3`}>
+          {brand.initial}
+        </div>
+        <span className={`text-sm font-semibold text-gray-700 transition-colors duration-150 group-hover:text-orange-500`}>
+          {brand.name}
+        </span>
+      </button>
+    ))}
+  </div>
+)
 }
