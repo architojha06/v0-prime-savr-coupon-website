@@ -32,10 +32,12 @@ const brandColors = [
   "bg-orange-500", "bg-pink-500", "bg-blue-500",
   "bg-teal-500", "bg-purple-500", "bg-rose-500",
 ]
+
 function getBrandColor(name: string) {
   const index = name.charCodeAt(0) % brandColors.length
   return brandColors[index]
 }
+
 function getBrandLogoUrl(brandName: string): string {
   const domain = brandName
     .toLowerCase()
@@ -48,8 +50,9 @@ function getBrandLogoUrl(brandName: string): string {
 export function CouponCard({ coupon }: { coupon: Coupon }) {
   const [copied, setCopied] = useState(false)
   const [showAuthDialog, setShowAuthDialog] = useState(false)
-  const { user } = useAuth()
   const [logoError, setLogoError] = useState(false)
+  const { user } = useAuth()
+
   const handleCopy = async () => {
     if (!user) { setShowAuthDialog(true); return }
     await navigator.clipboard.writeText(coupon.coupon_code)
@@ -86,16 +89,16 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl overflow-hidden ${logoError ? `${brandColor} text-lg font-bold text-white shadow-sm` : "bg-white border border-gray-100 shadow-sm"}`}>
-               {!logoError ? (
-                <img
-                src={getBrandLogoUrl(coupon.brand_name)}
-                  alt={coupon.brand_name}
-                  className="h-9 w-9 object-contain"
-                   onError={() => setLogoError(true)}
-                    />
-                     ) : (
-                    brandInitial
-                       )}
+                {!logoError ? (
+                  <img
+                    src={getBrandLogoUrl(coupon.brand_name)}
+                    alt={coupon.brand_name}
+                    className="h-9 w-9 object-contain"
+                    onError={() => setLogoError(true)}
+                  />
+                ) : (
+                  brandInitial
+                )}
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 leading-tight">{coupon.brand_name}</h3>
@@ -127,20 +130,28 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
               <span>Expires {formatDate(coupon.expiry_date)}</span>
             </div>
 
-            <button
-              onClick={handleCopy}
-              className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
-                copied
-                  ? "bg-green-50 text-green-600"
-                  : "bg-orange-500 text-white hover:bg-orange-600 active:scale-95"
-              }`}
-            >
-              {copied ? (
-                <><Check className="h-4 w-4" />Copied!</>
-              ) : (
-                <><Copy className="h-4 w-4" />Copy Code</>
+            <div className="flex items-center gap-2">
+              {coupon.affiliate_link && (
+                
+                <a href={coupon.affiliate_link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold border border-orange-200 text-orange-500 hover:bg-orange-50 transition-all duration-200">Visit Store</a>
               )}
-            </button>
+              {coupon.coupon_code && (
+                <button
+                  onClick={handleCopy}
+                  className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+                    copied
+                      ? "bg-green-50 text-green-600"
+                      : "bg-orange-500 text-white hover:bg-orange-600 active:scale-95"
+                  }`}
+                >
+                  {copied ? (
+                    <><Check className="h-4 w-4" />Copied!</>
+                  ) : (
+                    <><Copy className="h-4 w-4" />Copy Code</>
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>
