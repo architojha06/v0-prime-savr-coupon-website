@@ -44,8 +44,6 @@ export const BRAND_LOGO_MAP: Record<string, string> = {
     "https://cdn.brandfetch.io/nilkamal.com/w/400/h/400?c=1idTJMFDpXflZmCZgfO",
   "Go Noise":
     "https://cdn.brandfetch.io/gonoise.com/w/400/h/400?c=1idTJMFDpXflZmCZgfO",
-  "Milton":
-  "https://logo.clearbit.com/miltonindia.com",
   "Borosil":
     "https://cdn.brandfetch.io/borosil.com/w/400/h/400?c=1idTJMFDpXflZmCZgfO",
   "Kindlife":
@@ -54,9 +52,13 @@ export const BRAND_LOGO_MAP: Record<string, string> = {
 
   // ── Beauty / Skincare ────────────────────────────────────────────────────
   "Dot & Key":
-  "https://logo.clearbit.com/dotandkey.com",
-  "Forest Essentials":
-  "https://logo.clearbit.com/forestessentialsindia.com",
+  "https://www.google.com/s2/favicons?domain=dotandkey.com&sz=128",
+
+"Forest Essentials":
+  "https://www.google.com/s2/favicons?domain=forestessentialsindia.com&sz=128",
+
+"Milton":
+  "https://www.google.com/s2/favicons?domain=miltonindia.com&sz=128",
   "The Natural Wash":
     "https://cdn.brandfetch.io/thenaturalwash.in/w/400/h/400?c=1idTJMFDpXflZmCZgfO",
 
