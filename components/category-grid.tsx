@@ -14,14 +14,14 @@ const brandDomains: Record<string, string> = {
 }
 
 const brands = [
-  { name: "Levi's", url: "https://www.levi.com/IN/en_IN/" },
-  { name: "Myntra", url: "https://www.myntra.com" },
-  { name: "Noise", url: "https://www.gonoise.com" },
-  { name: "H&M", url: "https://www2.hm.com/en_in" },
-  { name: "Snitch", url: "https://www.snitch.co.in" },
-  { name: "MuscleBlaze", url: "https://www.muscleblaze.com" },
-  { name: "HK Vitals", url: "https://www.hkvitals.com" },
-  { name: "Dot & Key", url: "https://www.dotandkey.com" },
+  { name: "Levi's", url: "https://track.vcommission.com/click?campaign_id=11501&pub_id=127049" },
+  { name: "Myntra", url: "https://track.vcommission.com/click?campaign_id=10882&pub_id=127049" },
+  { name: "Noise", url: "https://track.vcommission.com/click?campaign_id=10320&pub_id=127049" },
+  { name: "H&M", url: "https://track.vcommission.com/click?campaign_id=12579&pub_id=127049" },
+  { name: "Snitch", url: "https://track.vcommission.com/click?campaign_id=10803&pub_id=127049" },
+  { name: "MuscleBlaze", url: "https://track.vcommission.com/click?campaign_id=10169&pub_id=127049" },
+  { name: "HK Vitals", url: "https://track.vcommission.com/click?campaign_id=10111&pub_id=127049" },
+  { name: "Dot & Key", url: "https://track.vcommission.com/click?campaign_id=12957&pub_id=127049" },
 ]
 
 export function CategoryGrid({ onCategoryClick }: CategoryGridProps) {

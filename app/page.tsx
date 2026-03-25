@@ -103,13 +103,13 @@ function HowItWorksStrip() {
 // Top cashback brands highlight grid
 function Mostpurchased() {
   const brands = [
-  { name: "Clove Oral Care", hot: true },
-  { name: "BeBodywise", hot: true },
-  { name: "Manmatters", hot: false },
-  { name: "Dot & Key", hot: false },
-  { name: "Myntra", hot: false },
-  { name: "Healthkart", hot: false },
-];
+  { name: "Clove Oral Care", hot: true, url: "https://track.vcommission.com/click?campaign_id=12131&pub_id=127049" },
+  { name: "BeBodywise", hot: true, url: "https://track.vcommission.com/click?campaign_id=13044&pub_id=127049" },
+  { name: "Manmatters", hot: false, url: "https://track.vcommission.com/click?campaign_id=13046&pub_id=127049" },
+  { name: "Dot & Key", hot: false, url: "https://track.vcommission.com/click?campaign_id=12957&pub_id=127049" },
+  { name: "Myntra", hot: false, url: "https://track.vcommission.com/click?campaign_id=10882&pub_id=127049" },
+  { name: "Healthkart", hot: false, url: "https://track.vcommission.com/click?campaign_id=10109&pub_id=127049" },
+]
   return (
     <section className="bg-gray-50 py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -121,19 +121,18 @@ function Mostpurchased() {
         </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {brands.map((b) => (
-            <div
-              key={b.name}
-              className="group relative flex flex-col items-center gap-2 rounded-2xl border border-orange-100 bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-md cursor-pointer"
-            >
-              {b.hot && (
-                <span className="absolute -top-2 right-3 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white">
-                  🔥 HOT
-                </span>
-              )}
-              <BrandLogo name={b.name} size={56} />
-              <p className="text-xs font-semibold text-gray-700 leading-tight">{b.name}</p>
-              <p className="text-sm font-black text-orange-500">5% back</p>
-            </div>
+  <a key={b.name} href={b.url} target="_blank" rel="noopener noreferrer"
+            className="group relative flex flex-col items-center gap-2 rounded-2xl border border-orange-100 bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-md cursor-pointer"
+         >
+            {b.hot && (
+                   <span className="absolute -top-2 right-3 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white">
+                    🔥 HOT
+                   </span>
+            )}
+            <BrandLogo name={b.name} size={56} />
+            <p className="text-xs font-semibold text-gray-700 leading-tight">{b.name}</p>
+            <p className="text-sm font-black text-orange-500">5% back</p>
+         </a>
           ))}
         </div>
       </div>
