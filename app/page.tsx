@@ -234,7 +234,7 @@ export default function Home() {
         </div>
 
         {/* ── Submit a coupon ── */}
-        <SubmitCouponForm />
+        
 
         {/* ── Cashback Claim ── */}
         <CashbackClaimSection />
