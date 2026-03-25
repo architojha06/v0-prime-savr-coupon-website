@@ -6,7 +6,6 @@ import { SearchBar } from "@/components/search-bar";
 import { CategoryGrid } from "@/components/category-grid";
 import { CategoryFilter } from "@/components/category-filter";
 import { CouponsList } from "@/components/coupons-list";
-import { SubmitCouponForm } from "@/components/submit-coupon-form";
 import { StatsSection } from "@/components/stats-section";
 import { Footer } from "@/components/footer";
 import { BrandTicker } from "@/components/brand-ticker";
