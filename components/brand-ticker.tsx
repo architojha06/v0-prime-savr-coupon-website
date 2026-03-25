@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import BrandLogo from "@/components/BrandLogo";
 
 const BRANDS = [
   { name: "Clove Oral Care",   emoji: "🦷", cashback: "5%", category: "Health" },
@@ -91,7 +92,7 @@ export function BrandTicker() {
               onMouseEnter={() => setHoveredBrand(`${brand.name}-${i}`)}
               onMouseLeave={() => setHoveredBrand(null)}
             >
-              <span className="text-2xl">{brand.emoji}</span>
+              <BrandLogo name={brand.name} size={40} />
               <div>
                 <p className="text-sm font-semibold text-gray-800 whitespace-nowrap">{brand.name}</p>
                 <p className="text-xs font-bold text-orange-500">{brand.cashback} Cashback</p>

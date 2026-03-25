@@ -10,6 +10,7 @@ import { StatsSection } from "@/components/stats-section";
 import { Footer } from "@/components/footer";
 import { BrandTicker } from "@/components/brand-ticker";
 import { CashbackClaimSection } from "@/components/cashback-claim-section";
+import BrandLogo from "@/components/BrandLogo";
 
 // Floating cashback pill that sticks at top after hero scrolls past
 function FloatingClaimBar() {
@@ -100,21 +101,21 @@ function HowItWorksStrip() {
 }
 
 // Top cashback brands highlight grid
-function TopCashbackBrands() {
+function Mostpurchased() {
   const brands = [
-    { emoji: "🦷", name: "Clove Oral Care", hot: true },
-    { emoji: "💆‍♀️", name: "BeBodywise", hot: true },
-    { emoji: "💪", name: "Manmatters", hot: false },
-    { emoji: "🌿", name: "Dot & Key", hot: false },
-    { emoji: "👟", name: "Myntra", hot: false },
-    { emoji: "🧴", name: "Healthkart", hot: false },
-  ];
+  { name: "Clove Oral Care", hot: true },
+  { name: "BeBodywise", hot: true },
+  { name: "Manmatters", hot: false },
+  { name: "Dot & Key", hot: false },
+  { name: "Myntra", hot: false },
+  { name: "Healthkart", hot: false },
+];
   return (
     <section className="bg-gray-50 py-14">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-8 text-center">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-            Top <span className="text-orange-500">Cashback</span> Brands
+            Most <span className="text-orange-500">Purchased</span> Brands
           </h2>
           <p className="mt-2 text-sm text-gray-500">These brands earn you the most — shop smart</p>
         </div>
@@ -129,7 +130,7 @@ function TopCashbackBrands() {
                   🔥 HOT
                 </span>
               )}
-              <span className="text-3xl">{b.emoji}</span>
+              <BrandLogo name={b.name} size={56} />
               <p className="text-xs font-semibold text-gray-700 leading-tight">{b.name}</p>
               <p className="text-sm font-black text-orange-500">5% back</p>
             </div>
@@ -219,7 +220,7 @@ export default function Home() {
         <BrandTicker />
 
         {/* ── Top cashback brands ── */}
-        <TopCashbackBrands />
+        <Mostpurchased />
 
         {/* ── Category grid ── */}
         <CategoryGrid onCategoryClick={handleCategoryClick} />
