@@ -26,7 +26,18 @@ type Profile = {
   created_at: string
 }
 
-type Tab = "dashboard" | "coupons" | "approvals" | "users" | "analytics"
+type CashbackClaim = {
+  id: string
+  created_at: string
+  brand: string
+  order_id: string
+  order_amount: number
+  cashback: number
+  upi_id: string
+  status: string
+}
+
+type Tab = "dashboard" | "coupons" | "approvals" | "users" | "analytics" | "claims"
 
 const CATEGORIES = ["Fashion", "Electronics", "Food", "Travel", "Beauty", "Sports", "Home", "Entertainment", "Other"]
 
@@ -49,6 +60,7 @@ export default function AdminPage() {
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [claims, setClaims] = useState<CashbackClaim[]>([])
 
   const fetchCoupons = async () => {
     const { data } = await supabase.from("coupons").select("*").order("created_at", { ascending: false })
@@ -60,6 +72,11 @@ export default function AdminPage() {
     setUsers(data || [])
   }
 
+  const fetchClaims = async () => {
+  const { data } = await supabase.from("cashback_claims").select("*").order("created_at", { ascending: false })
+  setClaims(data || [])
+  }
+
   useEffect(() => {
     const checkAdmin = async () => {
       const { data: { user } } = await supabase.auth.getUser()
@@ -68,7 +85,7 @@ export default function AdminPage() {
       if (!profile?.is_admin) { router.push("/"); return }
       setAuthorized(true)
       setChecking(false)
-      await Promise.all([fetchCoupons(), fetchUsers()])
+      await Promise.all([fetchCoupons(), fetchUsers(), fetchClaims()])
       setLoading(false)
     }
     checkAdmin()
@@ -102,6 +119,11 @@ export default function AdminPage() {
   const updateStatus = async (id: string, status: string) => {
     await supabase.from("coupons").update({ status }).eq("id", id)
     await fetchCoupons()
+  }
+
+  const updateClaimStatus = async (id: string, status: string) => {
+    await supabase.from("cashback_claims").update({ status }).eq("id", id)
+    await fetchClaims()
   }
 
   const toggleAdmin = async (userId: string, current: boolean) => {
@@ -144,6 +166,7 @@ export default function AdminPage() {
     { key: "approvals", label: "Approvals", icon: "✓" },
     { key: "users", label: "Users", icon: "👥" },
     { key: "analytics", label: "Analytics", icon: "📊" },
+    { key: "claims", label: "Claims", icon: "💸" },
   ]
 
   if (checking || !authorized) {
@@ -479,7 +502,81 @@ export default function AdminPage() {
               </div>
             </div>
           )}
-
+          {/* CLAIMS TAB */}
+{activeTab === "claims" && (
+  <div>
+    <div className="mb-4 flex items-center justify-between">
+      <h2 className="text-xl font-semibold text-white">
+        Cashback Claims <span className="text-gray-400 text-base">({claims.length})</span>
+      </h2>
+      <div className="flex gap-2 text-xs">
+        <span className="rounded-full bg-yellow-500/20 px-3 py-1 text-yellow-400">
+          {claims.filter(c => c.status === "pending").length} pending
+        </span>
+        <span className="rounded-full bg-green-500/20 px-3 py-1 text-green-400">
+          {claims.filter(c => c.status === "approved").length} approved
+        </span>
+      </div>
+    </div>
+    <div className="overflow-x-auto rounded-xl border border-gray-800 bg-gray-900">
+      <table className="w-full text-sm">
+        <thead className="border-b border-gray-800">
+          <tr>
+            {["Date", "Brand", "Order ID", "Amount", "Cashback", "UPI ID", "Status", "Actions"].map(h => (
+              <th key={h} className="px-4 py-3 text-left text-xs font-medium text-gray-400">{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-800">
+          {claims.map(c => (
+            <tr key={c.id} className="hover:bg-gray-800/50">
+              <td className="px-4 py-3 text-gray-400 whitespace-nowrap">
+                {new Date(c.created_at).toLocaleDateString()}
+              </td>
+              <td className="px-4 py-3 font-medium text-white">{c.brand}</td>
+              <td className="px-4 py-3">
+                <code className="rounded bg-gray-800 px-2 py-0.5 text-xs text-orange-300">{c.order_id}</code>
+              </td>
+              <td className="px-4 py-3 text-gray-400">₹{c.order_amount}</td>
+              <td className="px-4 py-3 font-semibold text-orange-400">₹{c.cashback}</td>
+              <td className="px-4 py-3 text-gray-400">{c.upi_id}</td>
+              <td className="px-4 py-3">
+                <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                  c.status === "approved" ? "bg-green-500/20 text-green-400" :
+                  c.status === "rejected" ? "bg-red-500/20 text-red-400" :
+                  "bg-yellow-500/20 text-yellow-400"
+                }`}>
+                  {c.status}
+                </span>
+              </td>
+              <td className="px-4 py-3">
+                {c.status === "pending" && (
+                  <div className="flex gap-2">
+                    <button onClick={() => updateClaimStatus(c.id, "approved")}
+                      className="rounded bg-green-500/20 px-2 py-1 text-xs text-green-400 hover:bg-green-500/30">
+                      ✓ Approve
+                    </button>
+                    <button onClick={() => updateClaimStatus(c.id, "rejected")}
+                      className="rounded bg-red-500/20 px-2 py-1 text-xs text-red-400 hover:bg-red-500/30">
+                      ✗ Reject
+                    </button>
+                  </div>
+                )}
+                {c.status !== "pending" && (
+                  <button onClick={() => updateClaimStatus(c.id, "pending")}
+                    className="rounded bg-gray-700 px-2 py-1 text-xs text-gray-400 hover:bg-gray-600">
+                    Reset
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {claims.length === 0 && <p className="py-8 text-center text-gray-500">No claims yet 🎉</p>}
+    </div>
+  </div>
+)}
         </div>
       </main>
 
