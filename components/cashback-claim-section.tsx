@@ -59,10 +59,25 @@ export function CashbackClaimSection() {
   const handleSubmit = async () => {
     if (!isValidForm) return;
     setLoading(true);
-    // TODO: wire up to Supabase / Google Sheet / email
-    await new Promise((r) => setTimeout(r, 1400));
-    setLoading(false);
-    setSubmitted(true);
+    try {
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      const { error } = await supabase.from("cashback_claims").insert({
+        brand: form.brand,
+        order_id: form.orderId,
+        order_amount: Number(form.orderAmount),
+        cashback: cashbackAmount,
+        upi_id: form.upiId,
+        status: "pending",
+      });
+      if (error) throw error;
+      setSubmitted(true);
+    } catch (err) {
+      console.error("Submission error:", err);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fieldClass = (field: string, extra = "") =>
