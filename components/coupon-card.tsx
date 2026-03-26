@@ -124,35 +124,32 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
           )}
 
           {/* Footer */}
-          <div className="mt-4 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-1.5 text-xs text-gray-400">
-              <Clock className="h-3.5 w-3.5" />
-              <span>Expires {formatDate(coupon.expiry_date)}</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {coupon.affiliate_link && (
-                
-                <a href={coupon.affiliate_link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold border border-orange-200 text-orange-500 hover:bg-orange-50 transition-all duration-200">Visit Store</a>
-              )}
-              {coupon.coupon_code && (
-                <button
-                  onClick={handleCopy}
-                  className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
-                    copied
-                      ? "bg-green-50 text-green-600"
-                      : "bg-orange-500 text-white hover:bg-orange-600 active:scale-95"
-                  }`}
-                >
-                  {copied ? (
-                    <><Check className="h-4 w-4" />Copied!</>
-                  ) : (
-                    <><Copy className="h-4 w-4" />Copy Code</>
-                  )}
-                </button>
-              )}
-            </div>
-          </div>
+          <div className="flex items-center gap-2">
+      <a
+    href={coupon.affiliate_link || '#'}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold bg-orange-500 text-white hover:bg-orange-600 transition-all duration-200"
+  >
+    🛒 Visit Store
+  </a>
+  {coupon.coupon_code && (
+    <button
+      onClick={handleCopy}
+      className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+        copied
+          ? "bg-green-50 text-green-600"
+          : "border border-orange-200 text-orange-500 hover:bg-orange-50 active:scale-95"
+      }`}
+    >
+      {copied ? (
+        <><Check className="h-4 w-4" />Copied!</>
+      ) : (
+        <><Copy className="h-4 w-4" />Copy Code</>
+      )}
+    </button>
+  )}
+</div>end
         </div>
       </div>
     </>
