@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { Search, X, Tag, ExternalLink } from "lucide-react"
+import { Search, X, ExternalLink } from "lucide-react"
 import useSWR from "swr"
 import { createClient } from "@/lib/supabase/client"
 import type { Coupon } from "./coupon-card"
@@ -123,13 +123,14 @@ export function SearchBar() {
                     <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-medium text-muted-foreground">
                       {coupon.category}
                     </span>
-                    <button
-                      onClick={() => handleCopyCode(coupon.coupon_code)}
+                    <a href={coupon.affiliate_link || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
                     >
-                      <Tag className="h-3 w-3" />
-                      Copy
-                    </button>
+                      <ExternalLink className="h-3 w-3" />
+                      Visit Store
+                    </a>
                   </div>
                 </li>
               ))}
