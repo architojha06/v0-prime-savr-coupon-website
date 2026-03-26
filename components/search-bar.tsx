@@ -31,9 +31,7 @@ export function SearchBar() {
     const searchQuery = query.toLowerCase().trim()
     if (!searchQuery) return false
     return (
-      coupon.brand_name?.toLowerCase().includes(searchQuery) ||
-      coupon.discount_description?.toLowerCase().includes(searchQuery) ||
-      coupon.category?.toLowerCase().includes(searchQuery)
+      coupon.brand_name?.toLowerCase().includes(searchQuery)
     )
   }).slice(0, 6) // Limit to 6 results
 
