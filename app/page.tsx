@@ -6,7 +6,6 @@ import { SearchBar } from "@/components/search-bar";
 import { CategoryGrid } from "@/components/category-grid";
 import { CategoryFilter } from "@/components/category-filter";
 import { CouponsList } from "@/components/coupons-list";
-import { StatsSection } from "@/components/stats-section";
 import { Footer } from "@/components/footer";
 import { BrandTicker } from "@/components/brand-ticker";
 import { CashbackClaimSection } from "@/components/cashback-claim-section";
@@ -210,7 +209,7 @@ export default function Home() {
         </section>
 
         {/* ── Stats ── */}
-        <StatsSection />
+        
 
         {/* ── How cashback works strip ── */}
         <HowItWorksStrip />
