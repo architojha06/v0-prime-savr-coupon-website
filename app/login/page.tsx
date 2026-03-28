@@ -26,8 +26,8 @@ function LoginPageInner() {
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) router.replace(nextPath)
+    supabase.auth.getUser().then(({ data }) => {
+  if (data.user) router.replace(nextPath)
     })
   }, [router, nextPath])
 
