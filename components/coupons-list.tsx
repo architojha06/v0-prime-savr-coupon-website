@@ -45,7 +45,6 @@ export function CouponsList({ selectedCategory = "All" }: CouponsListProps) {
   
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
-    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   if (isLoading) {

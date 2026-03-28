@@ -148,7 +148,7 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
       )}
     </button>
   )}
-</div>end
+</div>
         </div>
       </div>
     </>

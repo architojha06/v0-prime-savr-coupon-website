@@ -30,10 +30,10 @@ export function VisitStoreButton({
 
     // If not logged in, redirect to login first
     if (!user) {
-      router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
-      setState('idle')
-      return
-    }
+  router.push('/auth?redirect=' + encodeURIComponent(window.location.pathname))
+  setState('idle')
+  return
+}
 
     const trackedUrl = buildAffiliateUrl(affiliateUrl, brandSlug, user.id)
     
