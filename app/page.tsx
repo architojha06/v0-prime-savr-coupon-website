@@ -8,7 +8,6 @@ import { CategoryFilter } from "@/components/category-filter";
 import { CouponsList } from "@/components/coupons-list";
 import { Footer } from "@/components/footer";
 import { BrandTicker } from "@/components/brand-ticker";
-import { CashbackClaimSection } from "@/components/cashback-claim-section";
 import BrandLogo from "@/components/BrandLogo";
 
 
@@ -208,7 +207,7 @@ export default function Home() {
         
 
         {/* ── Cashback Claim ── */}
-        <CashbackClaimSection />
+        
       </main>
 
       <Footer />
