@@ -23,13 +23,21 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           {!isLoading && user ? (
-            <button
-              onClick={async () => { await signOut(); router.refresh() }}
-              className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-900"
-            >
-              Log out
-            </button>
-          ) : (
+  <div className="flex items-center gap-2">
+    <Link
+      href="/wallet"
+      className="rounded-xl border border-orange-200 px-4 py-2 text-sm font-medium text-orange-600 transition-all hover:bg-orange-50"
+    >
+      💰 Wallet
+    </Link>
+    <button
+      onClick={async () => { await signOut(); router.refresh() }}
+      className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-900"
+    >
+      Log out
+    </button>
+  </div>
+) : (
             <>
               <Link
                 href="/login"
