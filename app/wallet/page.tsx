@@ -1,37 +1,23 @@
-// middleware.ts — replace your current one entirely
-import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
+import { CashbackWallet } from '@/components/cashback-wallet'
 
-export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request })
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return request.cookies.getAll() },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        },
-      },
-    }
-  )
-
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // Protect /wallet — redirect to login if not authenticated
-  if (!user && request.nextUrl.pathname.startsWith('/wallet')) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    url.searchParams.set('next', '/wallet')
-    return NextResponse.redirect(url)
-  }
-
-  return supabaseResponse
+export const metadata = {
+  title: 'My Cashback Wallet | PrimeSavr',
 }
 
+export default function WalletPage() {
+  return (
+    <main className="min-h-screen bg-zinc-950 text-white">
+      <div className="max-w-lg mx-auto px-4 py-10">
+        <div className="mb-8">
+          <h1 className="text-2xl font-black text-white">
+            My <span className="text-orange-400">Wallet</span>
+          </h1>
+          <p className="text-sm text-zinc-500 mt-1">
+            Your cashback is tracked automatically on every purchase.
+          </p>
+        </div>
+        <CashbackWallet />
+      </div>
+    </main>
+  )
+}
