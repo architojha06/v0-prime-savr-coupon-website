@@ -1,23 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { CashbackClaimSection } from '@/components/cashback-claim-section';
 
 export default function Contact() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleSubmit = () => {
-    if (!name || !email || !subject || !message) {
-      alert('Please fill in all fields before submitting.');
-      return;
-    }
-    setSubmitted(true);
-    setName(''); setEmail(''); setSubject(''); setMessage('');
-  };
+  
 
   const faqs = [
     {
@@ -139,47 +129,8 @@ export default function Contact() {
         </div>
 
         {/* Contact Form */}
-        <div className="ps-form-wrap">
-          <div className="ps-form-header">
-            <h2>Send Us a Message</h2>
-            <p>Fill in the details below and we&apos;ll get back to you as soon as possible.</p>
-          </div>
-          <div className="ps-form-grid">
-            <div className="ps-form-group">
-              <label>Full Name</label>
-              <input type="text" placeholder="Rahul Sharma" value={name} onChange={e => setName(e.target.value)} />
-            </div>
-            <div className="ps-form-group">
-              <label>Email Address</label>
-              <input type="email" placeholder="rahul@email.com" value={email} onChange={e => setEmail(e.target.value)} />
-            </div>
-            <div className="ps-form-group full">
-              <label>Subject / Category</label>
-              <select value={subject} onChange={e => setSubject(e.target.value)}>
-                <option value="" disabled>Select a topic</option>
-                <option>Missing Cashback</option>
-                <option>Withdrawal Issue</option>
-                <option>Account Problem</option>
-                <option>Coupon Not Working</option>
-                <option>Partner / Merchant Enquiry</option>
-                <option>Report an Error</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div className="ps-form-group full">
-              <label>Your Message</label>
-              <textarea
-                placeholder="Please describe your issue or question in detail. For cashback disputes, include your order ID and merchant name."
-                value={message}
-                onChange={e => setMessage(e.target.value)}
-              />
-            </div>
-          </div>
-          <button className="ps-submit-btn" onClick={handleSubmit}>Send Message →</button>
-          {submitted && (
-            <div className="ps-success-msg">✅ Thanks for reaching out! We&apos;ve received your message and will respond within 24–48 hours.</div>
-          )}
-        </div>
+        {/* Cashback Claim Form */}
+        <CashbackClaimSection />
 
         {/* FAQ */}
         <div className="ps-faq-section">

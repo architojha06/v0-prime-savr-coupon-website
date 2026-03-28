@@ -11,35 +11,7 @@ import { BrandTicker } from "@/components/brand-ticker";
 import { CashbackClaimSection } from "@/components/cashback-claim-section";
 import BrandLogo from "@/components/BrandLogo";
 
-// Floating cashback pill that sticks at top after hero scrolls past
-function FloatingClaimBar() {
-  const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 420);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return (
-    <div
-      className={`fixed bottom-5 left-1/2 z-50 -translate-x-1/2 transition-all duration-500 ${
-        visible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-6 pointer-events-none"
-      }`}
-    >
-      <button
-        onClick={() => document.getElementById("cashback-claim")?.scrollIntoView({ behavior: "smooth" })}
-        className="flex items-center gap-2.5 rounded-full bg-orange-500 px-6 py-3 text-sm font-bold text-white shadow-xl shadow-orange-500/30 hover:bg-orange-400 transition-colors"
-      >
-        <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-        💸 Claim Your 5% Cashback
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-    </div>
-  );
-}
 
 // Trust badges row
 function TrustBadges() {
@@ -71,14 +43,14 @@ function HowItWorksStrip() {
   const steps = [
     { num: "1", text: "Click a brand link on PrimeSavr" },
     { num: "2", text: "Complete your purchase normally" },
-    { num: "3", text: "Submit claim with Order ID + UPI" },
-    { num: "4", text: "Cashback hits your UPI in 45 days" },
+    { num: "3", text: "Cashback tracked automatically — no forms needed" },
+    { num: "4", text: "Cashback appears in your wallet instantly" },
   ];
   return (
     <section className="bg-orange-500 py-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="text-center text-xs font-bold uppercase tracking-widest text-white/70 mb-6">
-          How 5% Cashback Works
+          How Automatic Cashback Works
         </p>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {steps.map((s, i) => (
@@ -242,7 +214,7 @@ export default function Home() {
       <Footer />
 
       {/* ── Floating sticky claim CTA ── */}
-      <FloatingClaimBar />
+      
     </div>
   );
 }
