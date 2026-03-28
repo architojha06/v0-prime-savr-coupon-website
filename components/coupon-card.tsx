@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Check, Clock, Copy, Tag, Info } from "lucide-react"
 import { useAuth } from "@/components/auth-provider"
 import { AuthRequiredDialog } from "@/components/auth-required-dialog"
+import { VisitStoreButton } from '@/components/visit-store-button'
 
 export interface Coupon {
   id: string
@@ -125,14 +126,12 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
 
           {/* Footer */}
           <div className="flex items-center gap-2">
-      <a
-    href={coupon.affiliate_link || '#'}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-semibold bg-orange-500 text-white hover:bg-orange-600 transition-all duration-200"
-  >
-    🛒 Visit Store
-  </a>
+       
+          <VisitStoreButton
+           brandSlug={coupon.brand_name}
+           affiliateUrl={coupon.affiliate_link || '#'}
+           variant="card"
+          />
   {coupon.coupon_code && (
     <button
       onClick={handleCopy}
