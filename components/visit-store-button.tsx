@@ -22,15 +22,21 @@ export function VisitStoreButton({
   const router = useRouter()
 
   async function handleClick() {
-    setState('tracking')
+  setState('tracking')
+  
+  try {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
-    try {
-      // Get current user
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
+    // If not logged in, redirect to login first
+    if (!user) {
+      router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
+      setState('idle')
+      return
+    }
 
-      // Build tracked URL with SubIDs
-      const trackedUrl = buildAffiliateUrl(affiliateUrl, brandSlug, user?.id)
+    const trackedUrl = buildAffiliateUrl(affiliateUrl, brandSlug, user.id)
+    
 
       // Log click to Supabase (non-blocking)
       if (user?.id) {

@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const brand_slug = p.get('sub2')           // e.g. "myntra"
   const order_amt  = parseFloat(p.get('sale_amount') || '0')
   const txn_id     = p.get('transaction_id') // vCommission's unique txn ID
-  const status     = p.get('status')         // "approved" | "pending" | "rejected"
+  const status = p.get('conversion_status')        // "approved" | "pending" | "rejected"
 
   // Reject incomplete postbacks
   if (!user_id || !txn_id || !order_amt) {
