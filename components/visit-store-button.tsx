@@ -30,7 +30,7 @@ export function VisitStoreButton({
 
       if (!user) {
         // Not logged in → go to auth page, never 404
-        router.push('/auth?redirect=' + encodeURIComponent(window.location.pathname))
+        router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
         setState('idle')
         return
       }
@@ -48,7 +48,7 @@ export function VisitStoreButton({
     } catch (err) {
       console.error('VisitStoreButton error:', err)
       // ✅ Auth-gate on error — never leak untracked URL to guests
-      router.push('/auth?redirect=' + encodeURIComponent(window.location.pathname))
+      router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
       setState('idle')
     }
   }

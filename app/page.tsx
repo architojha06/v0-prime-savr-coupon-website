@@ -95,7 +95,7 @@ function Mostpurchased() {
 
     if (!user) {
       // Not logged in → auth page
-      router.push("/auth?redirect=" + encodeURIComponent(window.location.pathname))
+      router.push("/login?redirect=" + encodeURIComponent(window.location.pathname))
       return
     }
 

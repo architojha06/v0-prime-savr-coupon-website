@@ -49,7 +49,7 @@ export function BrandTicker() {
   const handleBrandClick = (brand: typeof Brands[0]) => {
     if (!user) {
       // Not logged in → send to auth page
-      router.push("/auth?redirect=" + encodeURIComponent(window.location.pathname));
+      router.push("/login?redirect=" + encodeURIComponent(window.location.pathname));
       return;
     }
     // Logged in → build tracked URL with sub1=userId, sub2=slug
