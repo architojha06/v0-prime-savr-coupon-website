@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import BrandLogo from "@/components/BrandLogo";
 import { useAuth } from "@/components/auth-provider";
-import { buildAffiliateUrl, logAffiliateClick } from "@/lib/affiliate";
+import { buildAffiliateUrl } from "@/lib/affiliate";
 
 const Brands = [
   { name: "Dot & Key",         slug: "dot-and-key",         cashback: "5.0%", category: "Beauty",      url: "https://track.vcommission.com/click?campaign_id=12957&pub_id=127049" },
@@ -46,15 +46,15 @@ export function BrandTicker() {
 
   const tickerItems = [...filtered, ...filtered];
 
-  const handleBrandClick = (brand: typeof Brands[0]) => {
+  const handleBrandClick = async (brand: typeof Brands[0]) => {
     if (!user) {
       // Not logged in → send to auth page
       router.push("/login?redirect=" + encodeURIComponent(window.location.pathname));
       return;
     }
     // Logged in → build tracked URL with sub1=userId, sub2=slug
-    const trackedUrl = buildAffiliateUrl(brand.url, brand.slug, user.id);
-    logAffiliateClick(user.id, brand.slug); // non-blocking
+    const trackedUrl = await buildAffiliateUrl(brand.url, brand.slug, user.id);
+    
     window.open(trackedUrl, "_blank", "noopener,noreferrer");
   };
 

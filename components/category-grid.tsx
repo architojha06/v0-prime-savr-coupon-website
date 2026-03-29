@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/auth-provider"
-import { buildAffiliateUrl, logAffiliateClick } from "@/lib/affiliate"
+import { buildAffiliateUrl  } from "@/lib/affiliate"
 
 type CategoryGridProps = {
   onCategoryClick?: (category: string) => void
@@ -34,15 +34,14 @@ export function CategoryGrid({ onCategoryClick }: CategoryGridProps) {
   const { user } = useAuth()
   const router = useRouter()
 
-  const handleBrandClick = (brand: typeof brands[0]) => {
-    if (!user) {
-      router.push("/login?redirect=" + encodeURIComponent(window.location.pathname))
-      return
-    }
-    const trackedUrl = buildAffiliateUrl(brand.url, brand.slug, user.id)
-    logAffiliateClick(user.id, brand.slug)
-    window.open(trackedUrl, "_blank", "noopener,noreferrer")
+  const handleBrandClick = async (brand: typeof brands[0]) => {
+  if (!user) {
+    router.push("/login?redirect=" + encodeURIComponent(window.location.pathname))
+    return
   }
+  const trackedUrl = await buildAffiliateUrl(brand.url, brand.slug, user.id)
+  window.open(trackedUrl, "_blank", "noopener,noreferrer")
+}
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-4 sm:gap-4">

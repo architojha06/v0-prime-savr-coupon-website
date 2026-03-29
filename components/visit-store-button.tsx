@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { buildAffiliateUrl, logAffiliateClick } from '@/lib/affiliate'
+import { buildAffiliateUrl } from '@/lib/affiliate'
 
 interface VisitStoreButtonProps {
   brandSlug: string
-  affiliateUrl: string        // base vCommission URL without SubIDs
+  affiliateUrl: string
   className?: string
   variant?: 'default' | 'card'
 }
@@ -29,15 +29,13 @@ export function VisitStoreButton({
       const { data: { user } } = await supabase.auth.getUser()
 
       if (!user) {
-        // Not logged in → go to auth page, never 404
         router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
         setState('idle')
         return
       }
 
-      // Logged in → build tracked URL and open store
-      const trackedUrl = buildAffiliateUrl(affiliateUrl, brandSlug, user.id)
-      logAffiliateClick(user.id, brandSlug) // non-blocking
+      // buildAffiliateUrl now logs the click AND returns the tracked URL
+      const trackedUrl = await buildAffiliateUrl(affiliateUrl, brandSlug, user.id)
 
       setState('done')
       setTimeout(() => {
@@ -47,7 +45,6 @@ export function VisitStoreButton({
 
     } catch (err) {
       console.error('VisitStoreButton error:', err)
-      // ✅ Auth-gate on error — never leak untracked URL to guests
       router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
       setState('idle')
     }

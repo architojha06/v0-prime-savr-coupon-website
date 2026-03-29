@@ -1,38 +1,34 @@
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@supabase/supabase-js'
 
-// Builds a vCommission affiliate URL with SubIDs injected
-// sub1 = user ID (for postback matching)
-// sub2 = brand slug (for wallet display)
-// sub3 = source tag
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
-export function buildAffiliateUrl(
+// Logs the click first, then builds the URL with click ID in sub1
+export async function buildAffiliateUrl(
   baseAffiliateUrl: string,
   brandSlug: string,
   userId?: string
-): string {
+): Promise<string> {
   try {
-    const url = new URL(baseAffiliateUrl)
-    url.searchParams.set('sub1', userId ?? 'guest')
-    url.searchParams.set('sub2', brandSlug)
-    url.searchParams.set('sub3', 'primesavr')
-    return url.toString()
-  } catch {
-    return baseAffiliateUrl // fallback to original if URL is malformed
-  }
-}
-
-// Call this when user clicks Visit Store to log the click in Supabase
-export async function logAffiliateClick(
-  userId: string,
-  brandSlug: string
-): Promise<void> {
-  try {
-    const supabase = createClient()
-    await supabase
+    // 1. Log the click and get back the click record ID
+    const { data, error } = await supabase
       .from('affiliate_clicks')
-      .insert({ user_id: userId, brand_slug: brandSlug })
-  } catch (err) {
-    console.error('Failed to log affiliate click:', err)
-    // Non-blocking — don't throw, user should still get redirected
+      .insert({ user_id: userId ?? null, brand_slug: brandSlug })
+      .select('id')
+      .single()
+
+    if (error || !data) throw error
+
+    // 2. Build the vCommission URL with our click ID in sub1
+    const url = new URL(baseAffiliateUrl)
+    url.searchParams.set('sub1', data.id)      // our click ID → comes back in postback
+    url.searchParams.set('sub2', 'primesavr')  // source tag
+    return url.toString()
+
+  } catch {
+    // Fallback — still redirect even if logging fails
+    return baseAffiliateUrl
   }
 }

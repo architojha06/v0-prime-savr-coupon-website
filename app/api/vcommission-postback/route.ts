@@ -1,7 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
-// Uses service role key — never expose this on the client
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -10,18 +9,36 @@ const supabase = createClient(
 export async function GET(req: NextRequest) {
   const p = new URL(req.url).searchParams
 
-  const user_id    = p.get('sub1')           // your user's UUID
-  const brand_slug = p.get('sub2')           // e.g. "myntra"
+  const click_id   = p.get('sub1')            // our affiliate_clicks record ID
   const order_amt  = parseFloat(p.get('sale_amount') || '0')
-  const txn_id     = p.get('transaction_id') // vCommission's unique txn ID
-  const status = p.get('conversion_status')        // "approved" | "pending" | "rejected"
+  const txn_id     = p.get('transaction_id')
+  const status     = p.get('conversion_status')
+  const vcm_click_id = p.get('click_id')      // vCommission's own click ID
 
-  // Reject incomplete postbacks
-  if (!user_id || !txn_id || !order_amt) {
+  if (!click_id || !txn_id || !order_amt) {
     return NextResponse.json({ error: 'Missing required params' }, { status: 400 })
   }
 
-  // Reject cancelled/returned orders
+  // 1. Look up the click to find user_id and brand_slug
+  const { data: click, error: clickError } = await supabase
+    .from('affiliate_clicks')
+    .select('user_id, brand_slug')
+    .eq('id', click_id)
+    .single()
+
+  if (clickError || !click) {
+    return NextResponse.json({ error: 'Click not found' }, { status: 404 })
+  }
+
+  // 2. Update the click record with vCommission's click ID for reference
+  await supabase
+    .from('affiliate_clicks')
+    .update({ vcm_click_id })
+    .eq('id', click_id)
+
+  const { user_id, brand_slug } = click
+
+  // 3. Handle rejection
   if (status === 'rejected') {
     await supabase
       .from('cashback_wallet')
@@ -30,9 +47,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ success: true, action: 'rejected' })
   }
 
-  const cashback_amount = Math.min(order_amt * 0.05, 200) // 5%, max ₹200
+  // 4. Credit cashback
+  const cashback_amount = Math.min(order_amt * 0.05, 200)
 
-  // Upsert prevents duplicate credits if vCommission fires twice
   const { error } = await supabase
     .from('cashback_wallet')
     .upsert(

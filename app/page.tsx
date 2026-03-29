@@ -11,7 +11,7 @@ import { BrandTicker } from "@/components/brand-ticker";
 import BrandLogo from "@/components/BrandLogo";
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/auth-provider"
-import { buildAffiliateUrl, logAffiliateClick } from "@/lib/affiliate"
+import { buildAffiliateUrl} from "@/lib/affiliate"
 
 
 
@@ -90,20 +90,17 @@ function Mostpurchased() {
     { name: "Healthkart",      slug: "healthkart",      hot: false, url: "https://track.vcommission.com/click?campaign_id=10109&pub_id=127049" },
   ]
 
-  const handleBrandClick = (e: React.MouseEvent, brand: typeof brands[0]) => {
-    e.preventDefault()
+  const handleBrandClick = async (e: React.MouseEvent, brand: typeof brands[0]) => {
+  e.preventDefault()
 
-    if (!user) {
-      // Not logged in → auth page
-      router.push("/login?redirect=" + encodeURIComponent(window.location.pathname))
-      return
-    }
-
-    // Logged in → tracked URL
-    const trackedUrl = buildAffiliateUrl(brand.url, brand.slug, user.id)
-    logAffiliateClick(user.id, brand.slug) // non-blocking
-    window.open(trackedUrl, "_blank", "noopener,noreferrer")
+  if (!user) {
+    router.push("/login?redirect=" + encodeURIComponent(window.location.pathname))
+    return
   }
+
+  const trackedUrl = await buildAffiliateUrl(brand.url, brand.slug, user.id)
+  window.open(trackedUrl, "_blank", "noopener,noreferrer")
+}
 
   return (
     <section className="bg-gray-50 py-14">
