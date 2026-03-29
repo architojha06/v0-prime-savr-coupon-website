@@ -27,8 +27,11 @@ export async function buildAffiliateUrl(
     url.searchParams.set('sub2', 'primesavr')  // source tag
     return url.toString()
 
-  } catch {
-    // Fallback — still redirect even if logging fails
-    return baseAffiliateUrl
-  }
+  } catch (err) {
+  console.error('affiliate click log failed:', err)
+  const url = new URL(baseAffiliateUrl)
+  url.searchParams.set('sub1', userId ?? 'anonymous')
+  url.searchParams.set('sub2', 'primesavr')
+  return url.toString()
+}
 }
