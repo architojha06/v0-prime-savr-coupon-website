@@ -7,9 +7,9 @@ import { buildAffiliateUrl, logAffiliateClick } from '@/lib/affiliate'
 
 interface VisitStoreButtonProps {
   brandSlug: string
-  affiliateUrl: string         // base vCommission URL without SubIDs
+  affiliateUrl: string        // base vCommission URL without SubIDs
   className?: string
-  variant?: 'default' | 'card' // card = smaller, for brand grid
+  variant?: 'default' | 'card'
 }
 
 export function VisitStoreButton({
@@ -22,30 +22,24 @@ export function VisitStoreButton({
   const router = useRouter()
 
   async function handleClick() {
-  setState('tracking')
-  
-  try {
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    setState('tracking')
 
-    // If not logged in, redirect to login first
-    if (!user) {
-  router.push('/auth?redirect=' + encodeURIComponent(window.location.pathname))
-  setState('idle')
-  return
-}
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
 
-    const trackedUrl = buildAffiliateUrl(affiliateUrl, brandSlug, user.id)
-    
-
-      // Log click to Supabase (non-blocking)
-      if (user?.id) {
-        logAffiliateClick(user.id, brandSlug)
+      if (!user) {
+        // Not logged in → go to auth page, never 404
+        router.push('/auth?redirect=' + encodeURIComponent(window.location.pathname))
+        setState('idle')
+        return
       }
 
-      setState('done')
+      // Logged in → build tracked URL and open store
+      const trackedUrl = buildAffiliateUrl(affiliateUrl, brandSlug, user.id)
+      logAffiliateClick(user.id, brandSlug) // non-blocking
 
-      // Small delay so user sees "Tracking active!" before redirect
+      setState('done')
       setTimeout(() => {
         window.open(trackedUrl, '_blank', 'noopener,noreferrer')
         setState('idle')
@@ -53,8 +47,8 @@ export function VisitStoreButton({
 
     } catch (err) {
       console.error('VisitStoreButton error:', err)
-      // Fallback — still open the link even if tracking fails
-      window.open(affiliateUrl, '_blank', 'noopener,noreferrer')
+      // ✅ Auth-gate on error — never leak untracked URL to guests
+      router.push('/auth?redirect=' + encodeURIComponent(window.location.pathname))
       setState('idle')
     }
   }
@@ -68,10 +62,7 @@ export function VisitStoreButton({
       className={`
         inline-flex items-center gap-2 font-semibold rounded-lg
         transition-all duration-200 cursor-pointer
-        ${isCard
-          ? 'px-3 py-1.5 text-xs'
-          : 'px-4 py-2 text-sm'
-        }
+        ${isCard ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'}
         ${state === 'done'
           ? 'bg-green-600 text-white'
           : 'bg-orange-500 hover:bg-orange-600 text-white'

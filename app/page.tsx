@@ -11,6 +11,7 @@ import { BrandTicker } from "@/components/brand-ticker";
 import BrandLogo from "@/components/BrandLogo";
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/components/auth-provider"
+import { buildAffiliateUrl, logAffiliateClick } from "@/lib/affiliate"
 
 
 
@@ -73,26 +74,35 @@ function HowItWorksStrip() {
 }
 
 // Top cashback brands highlight grid
+// Drop-in replacement for the Mostpurchased component in page.tsx
+// Paste this in place of the existing Mostpurchased function
+
 function Mostpurchased() {
   const router = useRouter()
   const { user } = useAuth()
 
   const brands = [
-    { name: "Clove Oral Care", hot: true, url: "https://track.vcommission.com/click?campaign_id=12131&pub_id=127049" },
-    { name: "BeBodywise", hot: true, url: "https://track.vcommission.com/click?campaign_id=13044&pub_id=127049" },
-    { name: "Manmatters", hot: false, url: "https://track.vcommission.com/click?campaign_id=13046&pub_id=127049" },
-    { name: "Dot & Key", hot: false, url: "https://track.vcommission.com/click?campaign_id=12957&pub_id=127049" },
-    { name: "Myntra", hot: false, url: "https://track.vcommission.com/click?campaign_id=10882&pub_id=127049" },
-    { name: "Healthkart", hot: false, url: "https://track.vcommission.com/click?campaign_id=10109&pub_id=127049" },
+    { name: "Clove Oral Care", slug: "clove-oral-care", hot: true,  url: "https://track.vcommission.com/click?campaign_id=12131&pub_id=127049" },
+    { name: "BeBodywise",      slug: "bebodywise",      hot: true,  url: "https://track.vcommission.com/click?campaign_id=13044&pub_id=127049" },
+    { name: "Manmatters",      slug: "manmatters",      hot: false, url: "https://track.vcommission.com/click?campaign_id=13046&pub_id=127049" },
+    { name: "Dot & Key",       slug: "dot-and-key",     hot: false, url: "https://track.vcommission.com/click?campaign_id=12957&pub_id=127049" },
+    { name: "Myntra",          slug: "myntra",          hot: false, url: "https://track.vcommission.com/click?campaign_id=10882&pub_id=127049" },
+    { name: "Healthkart",      slug: "healthkart",      hot: false, url: "https://track.vcommission.com/click?campaign_id=10109&pub_id=127049" },
   ]
 
-  const handleBrandClick = (e: React.MouseEvent, url: string) => {
+  const handleBrandClick = (e: React.MouseEvent, brand: typeof brands[0]) => {
     e.preventDefault()
+
     if (!user) {
-      router.push('/auth?redirect=' + encodeURIComponent(window.location.pathname))
+      // Not logged in → auth page
+      router.push("/auth?redirect=" + encodeURIComponent(window.location.pathname))
       return
     }
-    window.open(url, '_blank', 'noopener,noreferrer')
+
+    // Logged in → tracked URL
+    const trackedUrl = buildAffiliateUrl(brand.url, brand.slug, user.id)
+    logAffiliateClick(user.id, brand.slug) // non-blocking
+    window.open(trackedUrl, "_blank", "noopener,noreferrer")
   }
 
   return (
@@ -106,7 +116,10 @@ function Mostpurchased() {
         </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {brands.map((b) => (
-            <a key={b.name} href={b.url} onClick={(e) => handleBrandClick(e, b.url)}
+            <a
+              key={b.name}
+              href={b.url}
+              onClick={(e) => handleBrandClick(e, b)}
               className="group relative flex flex-col items-center gap-2 rounded-2xl border border-orange-100 bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-md cursor-pointer"
             >
               {b.hot && (
@@ -124,6 +137,10 @@ function Mostpurchased() {
     </section>
   )
 }
+
+// Make sure these imports are at the top of page.tsx:
+// import { buildAffiliateUrl, logAffiliateClick } from "@/lib/affiliate"
+
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const couponsSectionRef = useRef<HTMLDivElement>(null);
