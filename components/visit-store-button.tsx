@@ -1,5 +1,4 @@
 'use client'
-
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -11,7 +10,6 @@ interface VisitStoreButtonProps {
   className?: string
   variant?: 'default' | 'card'
 }
-
 export function VisitStoreButton({
   brandSlug,
   affiliateUrl,
@@ -20,38 +18,30 @@ export function VisitStoreButton({
 }: VisitStoreButtonProps) {
   const [state, setState] = useState<'idle' | 'tracking' | 'done'>('idle')
   const router = useRouter()
-
   async function handleClick() {
     setState('tracking')
-
     try {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
-
       if (!user) {
         router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
         setState('idle')
         return
       }
-
       // buildAffiliateUrl now logs the click AND returns the tracked URL
       const trackedUrl = await buildAffiliateUrl(affiliateUrl, brandSlug, user.id)
-
       setState('done')
       setTimeout(() => {
         window.open(trackedUrl, '_blank', 'noopener,noreferrer')
         setState('idle')
       }, 600)
-
     } catch (err) {
       console.error('VisitStoreButton error:', err)
       router.push('/login?redirect=' + encodeURIComponent(window.location.pathname))
       setState('idle')
     }
   }
-
   const isCard = variant === 'card'
-
   return (
     <button
       onClick={handleClick}
