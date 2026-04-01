@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Header } from "@/components/header";
 import { SearchBar } from "@/components/search-bar";
 import { CategoryGrid } from "@/components/category-grid";
@@ -8,12 +8,6 @@ import { CategoryFilter } from "@/components/category-filter";
 import { CouponsList } from "@/components/coupons-list";
 import { Footer } from "@/components/footer";
 import { BrandTicker } from "@/components/brand-ticker";
-import BrandLogo from "@/components/BrandLogo";
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/components/auth-provider"
-import { buildAffiliateUrl} from "@/lib/affiliate"
-
-
 
 // Trust badges row
 function TrustBadges() {
@@ -57,7 +51,6 @@ function HowItWorksStrip() {
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {steps.map((s, i) => (
             <div key={i} className="relative flex flex-col items-center text-center">
-              {/* connector line */}
               {i < steps.length - 1 && (
                 <div className="hidden sm:block absolute top-4 left-[calc(50%+20px)] right-[-calc(50%-20px)] h-px bg-white/30 w-full" />
               )}
@@ -72,71 +65,6 @@ function HowItWorksStrip() {
     </section>
   );
 }
-
-// Top cashback brands highlight grid
-// Drop-in replacement for the Mostpurchased component in page.tsx
-// Paste this in place of the existing Mostpurchased function
-
-function Mostpurchased() {
-  const router = useRouter()
-  const { user } = useAuth()
-
-  const brands = [
-    { name: "Clove Oral Care", slug: "clove-oral-care", hot: true,  url: "https://track.vcommission.com/click?campaign_id=12131&pub_id=127049" },
-    { name: "BeBodywise",      slug: "bebodywise",      hot: true,  url: "https://track.vcommission.com/click?campaign_id=13044&pub_id=127049" },
-    { name: "Manmatters",      slug: "manmatters",      hot: false, url: "https://track.vcommission.com/click?campaign_id=13046&pub_id=127049" },
-    { name: "Dot & Key",       slug: "dot-and-key",     hot: false, url: "https://track.vcommission.com/click?campaign_id=12957&pub_id=127049" },
-    { name: "Myntra",          slug: "myntra",          hot: false, url: "https://track.vcommission.com/click?campaign_id=10882&pub_id=127049" },
-    { name: "Healthkart",      slug: "healthkart",      hot: false, url: "https://track.vcommission.com/click?campaign_id=10109&pub_id=127049" },
-  ]
-
-  const handleBrandClick = async (e: React.MouseEvent, brand: typeof brands[0]) => {
-  e.preventDefault()
-
-  if (!user) {
-    router.push("/login?redirect=" + encodeURIComponent(window.location.pathname))
-    return
-  }
-
-  const trackedUrl = await buildAffiliateUrl(brand.url, brand.slug, user.id)
-  window.open(trackedUrl, "_blank", "noopener,noreferrer")
-}
-
-  return (
-    <section className="bg-gray-50 py-14">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-            Most <span className="text-orange-500">Purchased</span> Brands
-          </h2>
-          <p className="mt-2 text-sm text-gray-500">These brands earn you the most — shop smart</p>
-        </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {brands.map((b) => (
-            <a
-              key={b.name}
-              href={b.url}
-              onClick={(e) => handleBrandClick(e, b)}
-              className="group relative flex flex-col items-center gap-2 rounded-2xl border border-orange-100 bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-md cursor-pointer"
-            >
-              {b.hot && (
-                <span className="absolute -top-2 right-3 rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white">
-                  🔥 HOT
-                </span>
-              )}
-              <BrandLogo name={b.name} size={56} />
-              <p className="text-xs font-semibold text-gray-700 leading-tight">{b.name}</p>
-              <p className="text-sm font-black text-orange-500">5% back</p>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// Make sure these imports are at the top of page.tsx:
-// import { buildAffiliateUrl, logAffiliateClick } from "@/lib/affiliate"
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -155,15 +83,14 @@ export default function Home() {
       <TrustBadges />
 
       <main className="flex-1">
-        {/* ── Hero ── */}
+
+        {/* ── 1. Hero ── */}
         <section className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-b from-orange-50/80 via-orange-50/30 to-white">
-          {/* decorative blobs */}
           <div className="pointer-events-none absolute -top-20 -right-20 h-72 w-72 rounded-full bg-orange-200/30 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-10 -left-20 h-56 w-56 rounded-full bg-orange-100/40 blur-2xl" />
 
           <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8 relative z-10">
             <div className="mx-auto max-w-2xl text-center">
-              {/* Pill badge */}
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-1.5 text-sm font-medium text-orange-600">
                 <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
                 India&apos;s fastest growing coupon platform
@@ -184,7 +111,6 @@ export default function Home() {
                 <SearchBar />
               </div>
 
-              {/* Cashback + social proof pills row */}
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 <div className="inline-flex items-center gap-2 rounded-full bg-green-50 border border-green-200 px-4 py-2 text-sm font-medium text-green-700">
                   💸 5% cashback → straight to UPI in 45 days
@@ -194,7 +120,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* scroll cue */}
               <div className="mt-10 flex justify-center">
                 <div className="flex flex-col items-center gap-1 text-gray-400">
                   <span className="text-xs">Scroll to explore</span>
@@ -207,41 +132,51 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ── Stats ── */}
-        
-
-        {/* ── How cashback works strip ── */}
-        <HowItWorksStrip />
-
-        {/* ── Brand Ticker ── */}
+        {/* ── 2. Brand Ticker ── */}
         <BrandTicker />
 
-        {/* ── Top cashback brands ── */}
-        <Mostpurchased />
+        {/* ── 3. How Cashback Works ── */}
+        <HowItWorksStrip />
 
-        {/* ── Category grid ── */}
-        <CategoryGrid onCategoryClick={handleCategoryClick} />
+        {/* ── 4. Brand Grid ── */}
+        <section className="py-14 bg-white">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-8 text-center">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+                Browse <span className="text-orange-500">All Brands</span>
+              </h2>
+              <p className="mt-2 text-sm text-gray-500">
+                Click any brand to shop and earn 5% cashback automatically
+              </p>
+            </div>
+            <CategoryGrid onCategoryClick={handleCategoryClick} />
+          </div>
+        </section>
 
-        {/* ── Deals / Coupons ── */}
-        <div ref={couponsSectionRef}>
-          <CategoryFilter
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-          />
-          <CouponsList selectedCategory={selectedCategory} />
-        </div>
+        {/* ── 5. Coupons ── */}
+        <section className="py-14 bg-gray-50">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-8 text-center">
+              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+                Today&apos;s Top <span className="text-orange-500">Coupon Codes</span>
+              </h2>
+              <p className="mt-2 text-sm text-gray-500">
+                Verified codes updated daily — stack with cashback for maximum savings
+              </p>
+            </div>
+            <div ref={couponsSectionRef}>
+              <CategoryFilter
+                selectedCategory={selectedCategory}
+                onCategoryChange={setSelectedCategory}
+              />
+              <CouponsList selectedCategory={selectedCategory} />
+            </div>
+          </div>
+        </section>
 
-        {/* ── Submit a coupon ── */}
-        
-
-        {/* ── Cashback Claim ── */}
-        
       </main>
 
       <Footer />
-
-      {/* ── Floating sticky claim CTA ── */}
-      
     </div>
   );
 }
