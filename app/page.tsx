@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { Header } from "@/components/header";
 import { SearchBar } from "@/components/search-bar";
-import { CategoryGrid } from "@/components/category-grid";
 import { CategoryFilter } from "@/components/category-filter";
 import { CouponsList } from "@/components/coupons-list";
 import { Footer } from "@/components/footer";
@@ -70,10 +69,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const couponsSectionRef = useRef<HTMLDivElement>(null);
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-    couponsSectionRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -138,8 +134,10 @@ export default function Home() {
         {/* ── 3. How Cashback Works ── */}
         <HowItWorksStrip />
 
-        {/* ── 4. Brand Grid ── */}
-        <section className="py-14 bg-white">
+        
+
+        {/* ── 5. Coupons ── */}
+        <section className="py-14 bg-gray-50">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mb-8 text-center">
               <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
@@ -147,21 +145,6 @@ export default function Home() {
               </h2>
               <p className="mt-2 text-sm text-gray-500">
                 Click any brand to shop and earn 5% cashback automatically
-              </p>
-            </div>
-            <CategoryGrid onCategoryClick={handleCategoryClick} />
-          </div>
-        </section>
-
-        {/* ── 5. Coupons ── */}
-        <section className="py-14 bg-gray-50">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-8 text-center">
-              <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-                Today&apos;s Top <span className="text-orange-500">Coupon Codes</span>
-              </h2>
-              <p className="mt-2 text-sm text-gray-500">
-                Verified codes updated daily — stack with cashback for maximum savings
               </p>
             </div>
             <div ref={couponsSectionRef}>
