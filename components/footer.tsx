@@ -8,7 +8,6 @@ const footerLinks = {
     { name: "Careers", href: "/careers" },
   ],
   support: [
-    { name: "Help Center", href: "/help" },
     { name: "Terms & Conditions", href: "/terms-and-conditions" },
     { name: "Privacy Policy", href: "/privacy-policy" },
     { name: "Disclaimer", href: "/disclaimer" },
