@@ -2,7 +2,15 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
+  // 🔧 MAINTENANCE MODE — remove these lines when done
+  return new Response('Site under maintenance. Back soon!', {
+    status: 503,
+    headers: { 'Retry-After': '3600' },
+  })
+  // 🔧 END MAINTENANCE
+
   let supabaseResponse = NextResponse.next({ request })
+  // ... rest of your existing code
   // ... rest of your existing code
 
   const supabase = createServerClient(
