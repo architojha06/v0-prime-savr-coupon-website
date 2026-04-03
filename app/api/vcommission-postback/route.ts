@@ -36,36 +36,45 @@ const DEFAULT_CASHBACK_RATE = 0.05
 export async function GET(req: NextRequest) {
   const p = new URL(req.url).searchParams
 
-  const vcm_click_id = p.get('click_id')
-  const sale_amount  = parseFloat(p.get('sale_amount') ?? '0')
-  const txn_id       = p.get('transaction_id')
-  const status       = p.get('conversion_status')
-  const campaign_id  = p.get('campaign_id') ?? ''
+  const sub1          = p.get('sub1')           // your internal click UUID
+  const vcm_click_id  = p.get('click_id')       // vCommission's click ID
+  const sale_amount   = parseFloat(p.get('sale_amount') ?? '0')
+  const txn_id        = p.get('transaction_id')
+  const status        = p.get('conversion_status')
+  const campaign_id   = p.get('campaign_id') ?? ''
 
-  console.log('📬 Postback received:', { vcm_click_id, sale_amount, txn_id, status, campaign_id })
+  console.log('📬 Postback received:', { sub1, vcm_click_id, sale_amount, txn_id, status, campaign_id })
 
-  // Validate required params
-  if (!vcm_click_id) {
-    console.error('❌ No click_id in postback')
-    return NextResponse.json({ error: 'Missing click_id' }, { status: 400 })
+  if (!sub1) {
+    console.error('❌ No sub1 in postback')
+    return NextResponse.json({ error: 'Missing sub1' }, { status: 400 })
   }
+
   if (!txn_id) {
     return NextResponse.json({ error: 'Missing transaction_id' }, { status: 400 })
   }
 
-  // Look up click record by vcm_click_id to get user_id and brand_slug
+  // Look up click by internal UUID (sub1)
   const { data: click, error: clickError } = await supabase
     .from('affiliate_clicks')
     .select('user_id, brand_slug')
-    .eq('vcm_click_id', vcm_click_id)
+    .eq('id', sub1)
     .single()
 
   if (clickError || !click) {
-    console.error('❌ Click record not found for vcm_click_id:', vcm_click_id)
+    console.error('❌ Click record not found for sub1:', sub1)
     return NextResponse.json({ error: 'Click not found' }, { status: 404 })
   }
 
   const { user_id, brand_slug } = click
+
+  // Optionally store vcm_click_id back on the click record
+  if (vcm_click_id) {
+    await supabase
+      .from('affiliate_clicks')
+      .update({ vcm_click_id })
+      .eq('id', sub1)
+  }
 
   if (!user_id) {
     console.warn('⚠️ Anonymous click — no user to credit')

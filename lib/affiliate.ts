@@ -11,12 +11,9 @@ export async function buildAffiliateUrl(
     })
 
     const data = await res.json()
-    if (!data.click_id) throw new Error('No click_id returned')
+    if (!data.redirect_url) throw new Error('No redirect_url returned')
 
-    const url = new URL(baseAffiliateUrl)
-    url.searchParams.set('sub1', data.click_id)
-    url.searchParams.set('sub2', 'primesavr')
-    return url.toString()
+    return data.redirect_url
 
   } catch (err) {
     console.error('affiliate click log failed:', err)
