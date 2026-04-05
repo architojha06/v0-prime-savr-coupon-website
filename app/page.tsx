@@ -136,7 +136,7 @@ export default function Home() {
 
         {/* ── 3. How Cashback Works ── */}
         <HowItWorksStrip />
-        <CashbackClaimSection />
+       
         
 
         {/* ── 5. Coupons ── */}
@@ -159,6 +159,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+         
+        <CashbackClaimSection />
 
       </main>
 
