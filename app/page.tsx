@@ -7,6 +7,7 @@ import { CategoryFilter } from "@/components/category-filter";
 import { CouponsList } from "@/components/coupons-list";
 import { Footer } from "@/components/footer";
 import { BrandTicker } from "@/components/brand-ticker";
+import { CashbackClaimSection } from "@/components/cashback-claim-section";
 
 // Trust badges row
 function TrustBadges() {
@@ -36,12 +37,13 @@ function TrustBadges() {
 // How cashback works — compact inline strip
 function HowItWorksStrip() {
   const steps = [
-    { num: "1", text: "Click a brand link on PrimeSavr" },
-    { num: "2", text: "Complete your purchase normally" },
-    { num: "3", text: "Cashback tracked automatically — no forms needed" },
-    { num: "4", text: "Cashback appears in your wallet instantly" },
-  ];
+  { num: "1", text: "Click any brand link on PrimeSavr" },
+  { num: "2", text: "Complete your purchase normally" },
+  { num: "3", text: "Submit your Order ID in Claim Cashback below" },
+  { num: "4", text: "Cashback credited to your wallet within 45 days" },
+];
   return (
+    
     <section className="bg-orange-500 py-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="text-center text-xs font-bold uppercase tracking-widest text-white/70 mb-6">
@@ -64,6 +66,7 @@ function HowItWorksStrip() {
     </section>
   );
 }
+
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -133,7 +136,7 @@ export default function Home() {
 
         {/* ── 3. How Cashback Works ── */}
         <HowItWorksStrip />
-
+        <CashbackClaimSection />
         
 
         {/* ── 5. Coupons ── */}
