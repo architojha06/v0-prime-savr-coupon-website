@@ -173,7 +173,7 @@ export function CashbackWallet() {
             ₹{total.toFixed(0)}
           </p>
           <p className="text-xs text-zinc-600 mt-2">
-            ⚡ Auto-tracked · No forms needed
+            🧾 Submit your order ID to claim cashback
           </p>
 
           {/* Summary row */}
@@ -202,12 +202,24 @@ export function CashbackWallet() {
         </div>
 
         {/* How it works notice */}
-        <div className="bg-green-950/30 border border-green-500/10 rounded-xl px-4 py-3 flex gap-3">
-          <span className="text-base">⚡</span>
-          <p className="text-xs text-green-600 leading-relaxed">
-            Cashback appears here automatically after your purchase. No order ID needed — just click Visit Store and buy normally.
-          </p>
+        <div className="bg-orange-950/30 border border-orange-500/20 rounded-xl px-4 py-4 flex gap-3 items-start">
+           <span className="text-base mt-0.5">📋</span>
+           <div>
+             <p className="text-xs text-orange-400 font-semibold mb-1">How to get your cashback</p>
+             <p className="text-xs text-zinc-400 leading-relaxed">
+               1. Click "Visit Store" and complete your purchase<br/>
+               2. Come back here and click "Claim Cashback"<br/>
+               3. Enter your Order ID — we'll verify and credit it within 48hrs
+            </p>
+           </div>
         </div>
+        <a
+         href="/cashback-claim"
+         className="block w-full py-3.5 rounded-xl font-bold text-sm text-center transition-all"
+         style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)', color: '#000' }}
+        >
+         📋 Claim Your Cashback
+        </a>
 
         {/* Transaction list */}
         <div className="bg-zinc-900/50 border border-white/5 rounded-2xl overflow-hidden">
@@ -231,11 +243,8 @@ export function CashbackWallet() {
           {/* Missing cashback fallback */}
           <div className="px-4 py-3 border-t border-white/5 flex items-center justify-between">
             <p className="text-xs text-zinc-600">Cashback not showing?</p>
-            <a
-              href="/contact"
-              className="text-xs text-orange-500 hover:text-orange-400 font-medium transition-colors"
-            >
-              Report missing →
+            <a href="/cashback-claim" className="text-xs text-orange-500 hover:text-orange-400 font-medium transition-colors">
+                Claim it here →
             </a>
           </div>
         </div>

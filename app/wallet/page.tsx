@@ -13,7 +13,7 @@ export default function WalletPage() {
             My <span className="text-orange-400">Wallet</span>
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
-            Your cashback is tracked automatically on every purchase.
+            Shop through PrimeSavr, then come back to claim your cashback.
           </p>
         </div>
         <CashbackWallet />
