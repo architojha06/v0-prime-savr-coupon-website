@@ -1,27 +1,31 @@
 'use client'
+
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { MyntraRedirectModal, useMyntraRedirect } from '@/components/MyntraRedirectModal'
+import { BrandRedirectModal } from '@/components/BrandRedirectModal'
+
+// Brands with apps that intercept tracking links on mobile.
+// All of these get the interstitial modal, not a raw window.open.
+const APP_INTERCEPT_BRANDS = new Set(['myntra', 'snitch', 'h-and-m', 'levis'])
 
 interface VisitStoreButtonProps {
   brandSlug: string
-  affiliateUrl: string
+  brandName: string
   className?: string
   variant?: 'default' | 'card'
 }
 
 export function VisitStoreButton({
   brandSlug,
-  affiliateUrl,
+  brandName,
   className = '',
   variant = 'default',
 }: VisitStoreButtonProps) {
   const [state, setState] = useState<'idle' | 'tracking'>('idle')
+  const [modalOpen, setModalOpen] = useState(false)
   const router = useRouter()
-  const { isOpen, openModal, closeModal, proceed } = useMyntraRedirect(brandSlug)
 
   async function handleClick() {
-    // Check login first
     setState('tracking')
     try {
       const { createClient } = await import('@/lib/supabase/client')
@@ -36,16 +40,16 @@ export function VisitStoreButton({
 
       setState('idle')
 
-      // Myntra uses the /go/ route with modal
-      if (brandSlug === 'myntra') {
-        openModal()
+      // Brands with apps get the interstitial modal warning
+      if (APP_INTERCEPT_BRANDS.has(brandSlug)) {
+        setModalOpen(true)
         return
       }
 
       // All other brands — direct tracked redirect
-      const { buildAffiliateUrl } = await import('@/lib/affiliate')
-      const trackedUrl = await buildAffiliateUrl(affiliateUrl, brandSlug, user.id)
-      window.open(trackedUrl, '_blank', 'noopener,noreferrer')
+      const { trackAndRedirect } = await import('@/lib/affiliate')
+      await trackAndRedirect(brandSlug)
+
     } catch (err) {
       console.error('VisitStoreButton error:', err)
       setState('idle')
@@ -74,14 +78,12 @@ export function VisitStoreButton({
         🏪 Visit Store
       </button>
 
-      {/* Myntra-specific modal */}
-      {brandSlug === 'myntra' && (
-        <MyntraRedirectModal
-          isOpen={isOpen}
-          onClose={closeModal}
-          onProceed={proceed}
-        />
-      )}
+      <BrandRedirectModal
+        isOpen={modalOpen}
+        brandSlug={brandSlug}
+        brandName={brandName}
+        onClose={() => setModalOpen(false)}
+      />
     </>
   )
 }

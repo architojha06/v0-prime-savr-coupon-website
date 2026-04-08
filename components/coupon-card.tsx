@@ -9,6 +9,7 @@ import { VisitStoreButton } from '@/components/visit-store-button'
 export interface Coupon {
   id: string
   brand_name: string
+  brand_slug: string
   discount_description: string
   category: string
   coupon_code: string
@@ -128,9 +129,9 @@ export function CouponCard({ coupon }: { coupon: Coupon }) {
           <div className="flex items-center gap-2">
        
           <VisitStoreButton
-           brandSlug={coupon.brand_name}
-           affiliateUrl={coupon.affiliate_link || '#'}
-           variant="card"
+            brandSlug={coupon.brand_slug}
+            brandName={coupon.brand_name}
+            variant="card"
           />
   {coupon.coupon_code && (
     <button
