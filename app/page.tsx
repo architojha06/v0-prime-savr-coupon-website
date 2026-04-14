@@ -330,31 +330,17 @@ function BrandsSection({ sectionRef }: { sectionRef: React.RefObject<HTMLDivElem
 }
 
 // ─── FAQ — pre-empts common drop-off objections ───────────────────────────────
-function FAQ() {
-  const faqs = [
-    {
-      q: "Do I need to create an account?",
-      a: "You need an account only to claim your cashback (so we know where to send the money). Browsing is completely open.",
-    },
-    {
-      q: "Why does it take 45 days?",
-      a: "Brands wait to confirm orders aren't returned before approving cashback. Once confirmed, we transfer it to your UPI immediately.",
-    },
-    {
-      q: "What if I return my order?",
-      a: "Cashback is only paid on non-returned orders. If you return, the cashback for that order is cancelled.",
-    },
-    {
-      q: "Is there a minimum order amount?",
-      a: "No minimum! Even a ₹200 order earns ₹10 cashback. Every purchase counts.",
-    },
-    {
-      q: "How do I get my cashback?",
-      a: "After shopping, come back to PrimeSavr, click 'Claim Cashback', and enter your Order ID. We handle the rest.",
-    },
-  ];
+const FAQ_ITEMS = [
+  { q: "Do I need to create an account?", a: "You need an account only to claim your cashback (so we know where to send the money). Browsing is completely open." },
+  { q: "Why does it take 45 days?", a: "Brands wait to confirm orders aren't returned before approving cashback. Once confirmed, we transfer it to your UPI immediately." },
+  { q: "What if I return my order?", a: "Cashback is only paid on non-returned orders. If you return, the cashback for that order is cancelled." },
+  { q: "Is there a minimum order amount?", a: "No minimum! Even a ₹200 order earns ₹10 cashback. Every purchase counts." },
+  { q: "How do I get my cashback?", a: "After shopping, come back to PrimeSavr, click 'Claim Cashback', and enter your Order ID. We handle the rest." },
+];
 
+function FAQ() {
   const [open, setOpen] = useState<number | null>(null);
+  const faqs = FAQ_ITEMS;
 
   return (
     <section className="bg-white py-16 border-t border-gray-100">
