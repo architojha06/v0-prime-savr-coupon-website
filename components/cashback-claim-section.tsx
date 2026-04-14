@@ -75,8 +75,31 @@ export function CashbackClaimSection() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [brandRate, setBrandRate] = useState<number | null>(null);
   const [rateLabel, setRateLabel] = useState<string>("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
-  // Fetch the actual cashback rate when brand is selected
+  useEffect(() => {
+  const supabase = createClient();
+  supabase.auth.getUser().then(({ data }) => {
+    setIsLoggedIn(!!data.user);
+    setAuthChecked(true);
+  });
+}, []);
+
+if (!authChecked) return null;
+if (!isLoggedIn) return (
+  <section className="bg-gray-900 py-16 px-4 text-center">
+    <div className="mx-auto max-w-md">
+      <p className="text-white text-xl font-bold mb-2">Login to Claim Cashback</p>
+      <p className="text-gray-400 text-sm mb-6">You need to be logged in to submit a cashback claim.</p>
+      <a href="/login" className="inline-block rounded-xl bg-orange-500 px-6 py-3 text-sm font-bold text-white hover:bg-orange-400">
+        Log In →
+      </a>
+    </div>
+  </section>
+);
+
+// Fetch the actual cashback rate when brand is selected// Fetch the actual cashback rate when brand is selected
   useEffect(() => {
     const slug = BRAND_SLUG_MAP[form.brand];
     if (!slug) {
