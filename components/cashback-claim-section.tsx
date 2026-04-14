@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-// Brand slug map — matches brand_slug in coupons table
 const BRAND_SLUG_MAP: Record<string, string> = {
   "Clove Oral Care":    "clove-oral-care",
   "BeBodywise":         "be-bodywise",
@@ -31,7 +30,6 @@ const BRAND_SLUG_MAP: Record<string, string> = {
 
 const PARTNER_BRANDS = Object.keys(BRAND_SLUG_MAP);
 
-// Fallback rates if DB fetch fails — matches what postback uses
 const FALLBACK_RATES: Record<string, number> = {
   "clove-oral-care":   0.05,
   "be-bodywise":       0.05,
@@ -78,28 +76,16 @@ export function CashbackClaimSection() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
 
+  // ── HOOK 1: auth check — must be before any early return ──
   useEffect(() => {
-  const supabase = createClient();
-  supabase.auth.getUser().then(({ data }) => {
-    setIsLoggedIn(!!data.user);
-    setAuthChecked(true);
-  });
-}, []);
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setIsLoggedIn(!!data.user);
+      setAuthChecked(true);
+    });
+  }, []);
 
-if (!authChecked) return null;
-if (!isLoggedIn) return (
-  <section className="bg-gray-900 py-16 px-4 text-center">
-    <div className="mx-auto max-w-md">
-      <p className="text-white text-xl font-bold mb-2">Login to Claim Cashback</p>
-      <p className="text-gray-400 text-sm mb-6">You need to be logged in to submit a cashback claim.</p>
-      <a href="/login" className="inline-block rounded-xl bg-orange-500 px-6 py-3 text-sm font-bold text-white hover:bg-orange-400">
-        Log In →
-      </a>
-    </div>
-  </section>
-);
-
-// Fetch the actual cashback rate when brand is selected// Fetch the actual cashback rate when brand is selected
+  // ── HOOK 2: fetch cashback rate when brand changes — must be before any early return ──
   useEffect(() => {
     const slug = BRAND_SLUG_MAP[form.brand];
     if (!slug) {
@@ -119,7 +105,6 @@ if (!isLoggedIn) return (
 
         const rates = data?.cashback_conditions?.rates ?? [];
         if (rates.length > 0) {
-          // Use the minimum rate shown to user (conservative, honest)
           const numericRates = rates
             .map((r: any) => parseFloat(r.value))
             .filter((v: number) => !isNaN(v) && v > 0);
@@ -128,7 +113,6 @@ if (!isLoggedIn) return (
             const minRate = Math.min(...numericRates) / 100;
             const maxRate = Math.max(...numericRates) / 100;
             setBrandRate(minRate);
-            // Show range if different rates exist
             if (minRate !== maxRate) {
               setRateLabel(`${(minRate * 100).toFixed(1)}%–${(maxRate * 100).toFixed(1)}%`);
             } else {
@@ -137,7 +121,6 @@ if (!isLoggedIn) return (
             return;
           }
         }
-        // Fallback
         const fallback = FALLBACK_RATES[slug] ?? 0.035;
         setBrandRate(fallback);
         setRateLabel(`${(fallback * 100).toFixed(1)}%`);
@@ -151,12 +134,23 @@ if (!isLoggedIn) return (
     fetchRate();
   }, [form.brand]);
 
+  // ── Early returns AFTER all hooks ──
+  if (!authChecked) return null;
+  if (!isLoggedIn) return (
+    <section className="bg-gray-900 py-16 px-4 text-center">
+      <div className="mx-auto max-w-md">
+        <p className="text-white text-xl font-bold mb-2">Login to Claim Cashback</p>
+        <p className="text-gray-400 text-sm mb-6">You need to be logged in to submit a cashback claim.</p>
+        <a href="/login" className="inline-block rounded-xl bg-orange-500 px-6 py-3 text-sm font-bold text-white hover:bg-orange-400">
+          Log In →
+        </a>
+      </div>
+    </section>
+  );
+
   const cashbackAmount =
     form.orderAmount && Number(form.orderAmount) > 0 && brandRate !== null
-      ? Math.min(
-          Math.round(Number(form.orderAmount) * brandRate * 100) / 100,
-          200
-        )
+      ? Math.min(Math.round(Number(form.orderAmount) * brandRate * 100) / 100, 200)
       : 0;
 
   const isValidForm =
@@ -237,10 +231,7 @@ if (!isLoggedIn) return (
 
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           {["1. Click our link", "2. Buy normally", "3. Submit below", "4. Get UPI transfer"].map((step) => (
-            <span
-              key={step}
-              className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs text-gray-300"
-            >
+            <span key={step} className="rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs text-gray-300">
               {step}
             </span>
           ))}
@@ -315,7 +306,6 @@ if (!isLoggedIn) return (
                     ))}
                   </ul>
                 )}
-                {/* Show cashback rate badge once brand selected */}
                 {form.brand && BRAND_SLUG_MAP[form.brand] && rateLabel && (
                   <p className="mt-1.5 text-xs text-orange-400">
                     💰 Cashback rate for {form.brand}: <span className="font-bold">{rateLabel}</span>
