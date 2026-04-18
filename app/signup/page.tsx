@@ -1,152 +1,104 @@
-"use client"
+'use client'
 
-import { Suspense, useEffect, useMemo, useState } from "react"
-import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Header } from "@/components/header"
-import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { applyReferralCode } from '@/lib/referral'
 
-function SignupPageInner() {
-  const router = useRouter()
+export default function SignupPage() {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const refCode = searchParams.get('ref')
 
-  const nextPath = useMemo(() => searchParams.get("next") ?? "/", [searchParams])
-  const showAuthRequired =
-    (searchParams.get("reason") ?? "") === "auth_required" ||
-    (searchParams.get("reason") ?? "") === "auth-required"
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) router.replace(nextPath)
-    })
-  }, [router, nextPath])
-
-  const onSubmit = async (e: React.FormEvent) => {
+  async function handleSignup(e: React.FormEvent) {
     e.preventDefault()
-    setIsSubmitting(true)
-    setError(null)
-    setSuccessMessage(null)
+    setLoading(true)
+    setError('')
 
     const supabase = createClient()
-    const { data, error: signUpError } = await supabase.auth.signUp({
+
+    const { data, error: signupError } = await supabase.auth.signUp({
       email,
       password,
     })
 
-    setIsSubmitting(false)
-
-    if (signUpError) {
-      setError(signUpError.message)
+    if (signupError || !data.user) {
+      setError(signupError?.message || 'Signup failed')
+      setLoading(false)
       return
     }
 
-    if (data.session) {
-      router.replace(nextPath)
-      router.refresh()
-      return
+    // Apply referral code if present
+    if (refCode) {
+      await applyReferralCode(data.user.id, refCode)
     }
 
-    setSuccessMessage(
-      "Account created. Please check your email to confirm your address, then log in."
-    )
+    router.push('/wallet')
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-md">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="text-2xl">Sign up</CardTitle>
-              <CardDescription>
-                {showAuthRequired
-                  ? "Please login or signup to access this feature"
-                  : "Create an account to copy codes and submit coupons."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={onSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Use at least 6 characters.
-                  </p>
-                </div>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-sm bg-white rounded-2xl shadow-sm p-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Create account</h1>
 
-                {error && (
-                  <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
-                    {error}
-                  </div>
-                )}
+        {/* Referral banner */}
+        {refCode && (
+          <div className="bg-violet-50 border border-violet-200 rounded-xl px-4 py-3 mb-4 flex items-center gap-2">
+            <span className="text-xl">🎁</span>
+            <div>
+              <p className="text-sm font-semibold text-violet-800">You were referred!</p>
+              <p className="text-xs text-violet-600">Sign up and make your first purchase to get <strong>₹50 cashback</strong></p>
+            </div>
+          </div>
+        )}
 
-                {successMessage && (
-                  <div className="rounded-md bg-secondary/40 p-3 text-sm text-foreground">
-                    {successMessage}
-                  </div>
-                )}
+        {!refCode && (
+          <p className="text-gray-500 text-sm mb-4">Join PrimeSavr and earn cashback on every order.</p>
+        )}
 
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? "Creating account..." : "Create account"}
-                </Button>
+        <div className="space-y-3">
+          <div>
+            <label className="text-sm font-medium text-gray-700 block mb-1">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-700 block mb-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Min 8 characters"
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+            />
+          </div>
 
-                <p className="text-center text-sm text-muted-foreground">
-                  Already have an account?{" "}
-                  <Link
-                    href={`/login?next=${encodeURIComponent(nextPath)}${
-                      showAuthRequired ? "&reason=auth_required" : ""
-                    }`}
-                    className="font-medium text-primary hover:underline"
-                  >
-                    Log in
-                  </Link>
-                </p>
-              </form>
-            </CardContent>
-          </Card>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <button
+            onClick={handleSignup}
+            disabled={loading || !email || !password}
+            className="w-full bg-violet-600 text-white font-bold py-3 rounded-xl text-sm hover:bg-violet-700 transition disabled:opacity-50"
+          >
+            {loading ? 'Creating account...' : 'Create Account →'}
+          </button>
         </div>
-      </main>
+
+        <p className="text-center text-xs text-gray-400 mt-4">
+          Already have an account?{' '}
+          <a href="/login" className="text-violet-600 font-medium">Log in</a>
+        </p>
+      </div>
     </div>
   )
 }
-
-export default function SignupPage() {
-  return (
-    <Suspense fallback={null}>
-      <SignupPageInner />
-    </Suspense>
-  )
-}
-

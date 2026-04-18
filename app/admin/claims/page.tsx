@@ -5,6 +5,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { creditReferralBonus } from '@/lib/referral'
 
 
 type Claim = {
