@@ -1,5 +1,4 @@
 import { CashbackWallet } from '@/components/cashback-wallet'
-import ReferralCard from '@/components/ReferralCard'
 
 export const metadata = {
   title: 'My Cashback Wallet | PrimeSavr',
@@ -18,9 +17,6 @@ export default function WalletPage() {
           </p>
         </div>
         <CashbackWallet />
-        <div className="mt-6">
-          <ReferralCard />
-        </div>
       </div>
     </main>
   )
